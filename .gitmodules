@@ -1,0 +1,4 @@
+[submodule "simple-statistics-src"]
+	path = simple-statistics-src
+    branch = v1.0.0
+	url = git@github.com:tmcw/simple-statistics.git

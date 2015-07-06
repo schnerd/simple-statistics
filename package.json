@@ -1,0 +1,28 @@
+{
+  "name": "simple-statistics-gh",
+  "version": "1.0.0",
+  "description": "simple statistics website",
+  "main": "index.js",
+  "scripts": {
+    "docs": "documentation ./simple-statistics-src/package.json -f html -o docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tmcw/simple-statistics.git"
+  },
+  "keywords": [
+    "simple",
+    "statistics",
+    "website"
+  ],
+  "author": "Tom MacWright",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tmcw/simple-statistics/issues"
+  },
+  "homepage": "https://github.com/tmcw/simple-statistics#readme",
+  "dependencies": {
+    "documentation": "^2.0.1",
+    "simple-statistics": "^0.9.2"
+  }
+}
