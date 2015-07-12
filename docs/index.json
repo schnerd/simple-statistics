@@ -1,0 +1,4895 @@
+[
+  {
+    "description": "[Bayesian Classifier](http://en.wikipedia.org/wiki/Naive_Bayes_classifier)\n\nThis is a naïve bayesian classifier that takes\nsingly-nested objects.",
+    "tags": [
+      {
+        "title": "name",
+        "name": "BayesianClassifier"
+      },
+      {
+        "title": "kind",
+        "kind": "class"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 3,
+        "column": 0
+      },
+      "end": {
+        "line": 8,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 9,
+          "column": 0
+        },
+        "end": {
+          "line": 15,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/bayesian_classifier.js",
+      "code": "'use strict';\n\n/**\n * [Bayesian Classifier](http://en.wikipedia.org/wiki/Naive_Bayes_classifier)\n *\n * This is a naïve bayesian classifier that takes\n * singly-nested objects.\n */\nfunction BayesianClassifier() {\n    // The number of items that are currently\n    // classified in the model\n    this.totalCount = 0;\n    // Every item classified in the model\n    this.data = {};\n}\n\n/**\n * ## Train\n * Train the classifier with a new item, which has a single\n * dimension of Javascript literal keys and values.\n *\n * @param {Object} item\n * @param {string} category\n */\nBayesianClassifier.prototype.train = function(item, category) {\n    // If the data object doesn't have any values\n    // for this category, create a new object for it.\n    if (!this.data[category]) {\n        this.data[category] = {};\n    }\n\n    // Iterate through each key in the item.\n    for (var k in item) {\n        var v = item[k];\n        // Initialize the nested object `data[category][k][item[k]]`\n        // with an object of keys that equal 0.\n        if (this.data[category][k] === undefined) {\n            this.data[category][k] = {};\n        }\n        if (this.data[category][k][v] === undefined) {\n            this.data[category][k][v] = 0;\n        }\n\n        // And increment the key for this key/value combination.\n        this.data[category][k][item[k]]++;\n    }\n\n    // Increment the number of items classified\n    this.totalCount++;\n};\n\n/**\n * Generate a score of how well this item matches all\n * possible categories based on its attributes\n *\n * @param {Object} item\n * @returns {Object} of probabilities that this item belongs to a\n * given category.\n */\nBayesianClassifier.prototype.score = function(item) {\n    // Initialize an empty array of odds per category.\n    var odds = {}, category;\n    // Iterate through each key in the item,\n    // then iterate through each category that has been used\n    // in previous calls to `.train()`\n    for (var k in item) {\n        var v = item[k];\n        for (category in this.data) {\n            // Create an empty object for storing key - value combinations\n            // for this category.\n            if (odds[category] === undefined) { odds[category] = {}; }\n\n            // If this item doesn't even have a property, it counts for nothing,\n            // but if it does have the property that we're looking for from\n            // the item to categorize, it counts based on how popular it is\n            // versus the whole population.\n            if (this.data[category][k]) {\n                odds[category][k + '_' + v] = (this.data[category][k][v] || 0) / this.totalCount;\n            } else {\n                odds[category][k + '_' + v] = 0;\n            }\n        }\n    }\n\n    // Set up a new object that will contain sums of these odds by category\n    var oddsSums = {};\n\n    for (category in odds) {\n        // Tally all of the odds for each category-combination pair -\n        // the non-existence of a category does not add anything to the\n        // score.\n        for (var combination in odds[category]) {\n            if (oddsSums[category] === undefined) {\n                oddsSums[category] = 0;\n            }\n            oddsSums[category] += odds[category][combination];\n        }\n    }\n\n    return oddsSums;\n};\n\nmodule.exports = BayesianClassifier;"
+    },
+    "name": "BayesianClassifier",
+    "kind": "class",
+    "members": {
+      "instance": [
+        {
+          "description": "Generate a score of how well this item matches all\npossible categories based on its attributes",
+          "tags": [
+            {
+              "title": "param",
+              "description": null,
+              "lineNumber": 4,
+              "type": {
+                "type": "NameExpression",
+                "name": "Object"
+              },
+              "name": "item"
+            },
+            {
+              "title": "returns",
+              "description": "of probabilities that this item belongs to a\ngiven category.",
+              "lineNumber": 5,
+              "type": {
+                "type": "NameExpression",
+                "name": "Object"
+              }
+            },
+            {
+              "title": "name",
+              "name": "score"
+            },
+            {
+              "title": "kind",
+              "kind": "function"
+            },
+            {
+              "title": "memberof",
+              "description": "BayesianClassifier"
+            },
+            {
+              "title": "instance"
+            }
+          ],
+          "loc": {
+            "start": {
+              "line": 52,
+              "column": 0
+            },
+            "end": {
+              "line": 59,
+              "column": 3
+            }
+          },
+          "context": {
+            "loc": {
+              "start": {
+                "line": 60,
+                "column": 0
+              },
+              "end": {
+                "line": 101,
+                "column": 2
+              }
+            },
+            "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/bayesian_classifier.js",
+            "code": "'use strict';\n\n/**\n * [Bayesian Classifier](http://en.wikipedia.org/wiki/Naive_Bayes_classifier)\n *\n * This is a naïve bayesian classifier that takes\n * singly-nested objects.\n */\nfunction BayesianClassifier() {\n    // The number of items that are currently\n    // classified in the model\n    this.totalCount = 0;\n    // Every item classified in the model\n    this.data = {};\n}\n\n/**\n * ## Train\n * Train the classifier with a new item, which has a single\n * dimension of Javascript literal keys and values.\n *\n * @param {Object} item\n * @param {string} category\n */\nBayesianClassifier.prototype.train = function(item, category) {\n    // If the data object doesn't have any values\n    // for this category, create a new object for it.\n    if (!this.data[category]) {\n        this.data[category] = {};\n    }\n\n    // Iterate through each key in the item.\n    for (var k in item) {\n        var v = item[k];\n        // Initialize the nested object `data[category][k][item[k]]`\n        // with an object of keys that equal 0.\n        if (this.data[category][k] === undefined) {\n            this.data[category][k] = {};\n        }\n        if (this.data[category][k][v] === undefined) {\n            this.data[category][k][v] = 0;\n        }\n\n        // And increment the key for this key/value combination.\n        this.data[category][k][item[k]]++;\n    }\n\n    // Increment the number of items classified\n    this.totalCount++;\n};\n\n/**\n * Generate a score of how well this item matches all\n * possible categories based on its attributes\n *\n * @param {Object} item\n * @returns {Object} of probabilities that this item belongs to a\n * given category.\n */\nBayesianClassifier.prototype.score = function(item) {\n    // Initialize an empty array of odds per category.\n    var odds = {}, category;\n    // Iterate through each key in the item,\n    // then iterate through each category that has been used\n    // in previous calls to `.train()`\n    for (var k in item) {\n        var v = item[k];\n        for (category in this.data) {\n            // Create an empty object for storing key - value combinations\n            // for this category.\n            if (odds[category] === undefined) { odds[category] = {}; }\n\n            // If this item doesn't even have a property, it counts for nothing,\n            // but if it does have the property that we're looking for from\n            // the item to categorize, it counts based on how popular it is\n            // versus the whole population.\n            if (this.data[category][k]) {\n                odds[category][k + '_' + v] = (this.data[category][k][v] || 0) / this.totalCount;\n            } else {\n                odds[category][k + '_' + v] = 0;\n            }\n        }\n    }\n\n    // Set up a new object that will contain sums of these odds by category\n    var oddsSums = {};\n\n    for (category in odds) {\n        // Tally all of the odds for each category-combination pair -\n        // the non-existence of a category does not add anything to the\n        // score.\n        for (var combination in odds[category]) {\n            if (oddsSums[category] === undefined) {\n                oddsSums[category] = 0;\n            }\n            oddsSums[category] += odds[category][combination];\n        }\n    }\n\n    return oddsSums;\n};\n\nmodule.exports = BayesianClassifier;"
+          },
+          "params": [
+            {
+              "title": "param",
+              "description": null,
+              "lineNumber": 4,
+              "type": {
+                "type": "NameExpression",
+                "name": "Object"
+              },
+              "name": "item"
+            }
+          ],
+          "returns": [
+            {
+              "title": "returns",
+              "description": "of probabilities that this item belongs to a\ngiven category.",
+              "lineNumber": 5,
+              "type": {
+                "type": "NameExpression",
+                "name": "Object"
+              }
+            }
+          ],
+          "name": "score",
+          "kind": "function",
+          "memberof": "BayesianClassifier",
+          "scope": "instance",
+          "members": {
+            "instance": [],
+            "static": []
+          },
+          "events": [],
+          "path": [
+            "BayesianClassifier",
+            "score"
+          ]
+        },
+        {
+          "description": "## Train\nTrain the classifier with a new item, which has a single\ndimension of Javascript literal keys and values.",
+          "tags": [
+            {
+              "title": "param",
+              "description": null,
+              "lineNumber": 5,
+              "type": {
+                "type": "NameExpression",
+                "name": "Object"
+              },
+              "name": "item"
+            },
+            {
+              "title": "param",
+              "description": null,
+              "lineNumber": 6,
+              "type": {
+                "type": "NameExpression",
+                "name": "string"
+              },
+              "name": "category"
+            },
+            {
+              "title": "name",
+              "name": "train"
+            },
+            {
+              "title": "kind",
+              "kind": "function"
+            },
+            {
+              "title": "memberof",
+              "description": "BayesianClassifier"
+            },
+            {
+              "title": "instance"
+            }
+          ],
+          "loc": {
+            "start": {
+              "line": 17,
+              "column": 0
+            },
+            "end": {
+              "line": 24,
+              "column": 3
+            }
+          },
+          "context": {
+            "loc": {
+              "start": {
+                "line": 25,
+                "column": 0
+              },
+              "end": {
+                "line": 50,
+                "column": 2
+              }
+            },
+            "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/bayesian_classifier.js",
+            "code": "'use strict';\n\n/**\n * [Bayesian Classifier](http://en.wikipedia.org/wiki/Naive_Bayes_classifier)\n *\n * This is a naïve bayesian classifier that takes\n * singly-nested objects.\n */\nfunction BayesianClassifier() {\n    // The number of items that are currently\n    // classified in the model\n    this.totalCount = 0;\n    // Every item classified in the model\n    this.data = {};\n}\n\n/**\n * ## Train\n * Train the classifier with a new item, which has a single\n * dimension of Javascript literal keys and values.\n *\n * @param {Object} item\n * @param {string} category\n */\nBayesianClassifier.prototype.train = function(item, category) {\n    // If the data object doesn't have any values\n    // for this category, create a new object for it.\n    if (!this.data[category]) {\n        this.data[category] = {};\n    }\n\n    // Iterate through each key in the item.\n    for (var k in item) {\n        var v = item[k];\n        // Initialize the nested object `data[category][k][item[k]]`\n        // with an object of keys that equal 0.\n        if (this.data[category][k] === undefined) {\n            this.data[category][k] = {};\n        }\n        if (this.data[category][k][v] === undefined) {\n            this.data[category][k][v] = 0;\n        }\n\n        // And increment the key for this key/value combination.\n        this.data[category][k][item[k]]++;\n    }\n\n    // Increment the number of items classified\n    this.totalCount++;\n};\n\n/**\n * Generate a score of how well this item matches all\n * possible categories based on its attributes\n *\n * @param {Object} item\n * @returns {Object} of probabilities that this item belongs to a\n * given category.\n */\nBayesianClassifier.prototype.score = function(item) {\n    // Initialize an empty array of odds per category.\n    var odds = {}, category;\n    // Iterate through each key in the item,\n    // then iterate through each category that has been used\n    // in previous calls to `.train()`\n    for (var k in item) {\n        var v = item[k];\n        for (category in this.data) {\n            // Create an empty object for storing key - value combinations\n            // for this category.\n            if (odds[category] === undefined) { odds[category] = {}; }\n\n            // If this item doesn't even have a property, it counts for nothing,\n            // but if it does have the property that we're looking for from\n            // the item to categorize, it counts based on how popular it is\n            // versus the whole population.\n            if (this.data[category][k]) {\n                odds[category][k + '_' + v] = (this.data[category][k][v] || 0) / this.totalCount;\n            } else {\n                odds[category][k + '_' + v] = 0;\n            }\n        }\n    }\n\n    // Set up a new object that will contain sums of these odds by category\n    var oddsSums = {};\n\n    for (category in odds) {\n        // Tally all of the odds for each category-combination pair -\n        // the non-existence of a category does not add anything to the\n        // score.\n        for (var combination in odds[category]) {\n            if (oddsSums[category] === undefined) {\n                oddsSums[category] = 0;\n            }\n            oddsSums[category] += odds[category][combination];\n        }\n    }\n\n    return oddsSums;\n};\n\nmodule.exports = BayesianClassifier;"
+          },
+          "params": [
+            {
+              "title": "param",
+              "description": null,
+              "lineNumber": 5,
+              "type": {
+                "type": "NameExpression",
+                "name": "Object"
+              },
+              "name": "item"
+            },
+            {
+              "title": "param",
+              "description": null,
+              "lineNumber": 6,
+              "type": {
+                "type": "NameExpression",
+                "name": "string"
+              },
+              "name": "category"
+            }
+          ],
+          "name": "train",
+          "kind": "function",
+          "memberof": "BayesianClassifier",
+          "scope": "instance",
+          "members": {
+            "instance": [],
+            "static": []
+          },
+          "events": [],
+          "path": [
+            "BayesianClassifier",
+            "train"
+          ]
+        }
+      ],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "BayesianClassifier"
+    ]
+  },
+  {
+    "description": "## [Perceptron Classifier](http://en.wikipedia.org/wiki/Perceptron)\n\nThis is a single-layer perceptron classifier that takes\narrays of numbers and predicts whether they should be classified\nas either 0 or 1 (negative or positive examples).",
+    "tags": [
+      {
+        "title": "name",
+        "name": "PerceptronModel"
+      },
+      {
+        "title": "kind",
+        "kind": "class"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 3,
+        "column": 0
+      },
+      "end": {
+        "line": 9,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 10,
+          "column": 0
+        },
+        "end": {
+          "line": 18,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/perceptron.js",
+      "code": "'use strict';\n\n/**\n * ## [Perceptron Classifier](http://en.wikipedia.org/wiki/Perceptron)\n *\n * This is a single-layer perceptron classifier that takes\n * arrays of numbers and predicts whether they should be classified\n * as either 0 or 1 (negative or positive examples).\n */\nfunction PerceptronModel() {\n    // The weights, or coefficients of the model;\n    // weights are only populated when training with data.\n    this.weights = [];\n    // The bias term, or intercept; it is also a weight but\n    // it's stored separately for convenience as it is always\n    // multiplied by one.\n    this.bias = 0;\n}\n\n/**\n * ## Predict\n *\n * Use an array of features with the weight array and bias\n * to predict whether an example is labeled 0 or 1.\n *\n * @param {Array} features\n * @returns {number} 1 if the score is over 0, otherwise 0\n */\nPerceptronModel.prototype.predict = function(features) {\n\n    // Only predict if previously trained\n    // on the same size feature array(s).\n    if (features.length !== this.weights.length) { return null; }\n\n    // Calculate the sum of features times weights,\n    // with the bias added (implicitly times one).\n    var score = 0;\n    for (var i = 0; i < this.weights.length; i++) {\n        score += this.weights[i] * features[i];\n    }\n    score += this.bias;\n\n    // Classify as 1 if the score is over 0, otherwise 0.\n    return score > 0 ? 1 : 0;\n};\n\n/**\n * ## Train\n * Train the classifier with a new example, which is\n * a numeric array of features and a 0 or 1 label.\n *\n * @param {Array} features\n * @param {number} label either 0 or 1\n * @returns {PerceptronModel} this\n */\nPerceptronModel.prototype.train = function(features, label) {\n    // Require that only labels of 0 or 1 are considered.\n    if (label !== 0 && label !== 1) { return null; }\n    // The length of the feature array determines\n    // the length of the weight array.\n    // The perceptron will continue learning as long as\n    // it keeps seeing feature arrays of the same length.\n    // When it sees a new data shape, it initializes.\n    if (features.length !== this.weights.length) {\n        this.weights = features;\n        this.bias = 1;\n    }\n    // Make a prediction based on current weights.\n    var prediction = this.predict(features);\n    // Update the weights if the prediction is wrong.\n    if (prediction !== label) {\n        var gradient = label - prediction;\n        for (var i = 0; i < this.weights.length; i++) {\n            this.weights[i] += gradient * features[i];\n        }\n        this.bias += gradient;\n    }\n    return this;\n};\n\nmodule.exports = PerceptronModel;"
+    },
+    "name": "PerceptronModel",
+    "kind": "class",
+    "members": {
+      "instance": [
+        {
+          "description": "## Predict\n\nUse an array of features with the weight array and bias\nto predict whether an example is labeled 0 or 1.",
+          "tags": [
+            {
+              "title": "param",
+              "description": null,
+              "lineNumber": 6,
+              "type": {
+                "type": "NameExpression",
+                "name": "Array"
+              },
+              "name": "features"
+            },
+            {
+              "title": "returns",
+              "description": "1 if the score is over 0, otherwise 0",
+              "lineNumber": 7,
+              "type": {
+                "type": "NameExpression",
+                "name": "number"
+              }
+            },
+            {
+              "title": "name",
+              "name": "predict"
+            },
+            {
+              "title": "kind",
+              "kind": "function"
+            },
+            {
+              "title": "memberof",
+              "description": "PerceptronModel"
+            },
+            {
+              "title": "instance"
+            }
+          ],
+          "loc": {
+            "start": {
+              "line": 20,
+              "column": 0
+            },
+            "end": {
+              "line": 28,
+              "column": 3
+            }
+          },
+          "context": {
+            "loc": {
+              "start": {
+                "line": 29,
+                "column": 0
+              },
+              "end": {
+                "line": 45,
+                "column": 2
+              }
+            },
+            "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/perceptron.js",
+            "code": "'use strict';\n\n/**\n * ## [Perceptron Classifier](http://en.wikipedia.org/wiki/Perceptron)\n *\n * This is a single-layer perceptron classifier that takes\n * arrays of numbers and predicts whether they should be classified\n * as either 0 or 1 (negative or positive examples).\n */\nfunction PerceptronModel() {\n    // The weights, or coefficients of the model;\n    // weights are only populated when training with data.\n    this.weights = [];\n    // The bias term, or intercept; it is also a weight but\n    // it's stored separately for convenience as it is always\n    // multiplied by one.\n    this.bias = 0;\n}\n\n/**\n * ## Predict\n *\n * Use an array of features with the weight array and bias\n * to predict whether an example is labeled 0 or 1.\n *\n * @param {Array} features\n * @returns {number} 1 if the score is over 0, otherwise 0\n */\nPerceptronModel.prototype.predict = function(features) {\n\n    // Only predict if previously trained\n    // on the same size feature array(s).\n    if (features.length !== this.weights.length) { return null; }\n\n    // Calculate the sum of features times weights,\n    // with the bias added (implicitly times one).\n    var score = 0;\n    for (var i = 0; i < this.weights.length; i++) {\n        score += this.weights[i] * features[i];\n    }\n    score += this.bias;\n\n    // Classify as 1 if the score is over 0, otherwise 0.\n    return score > 0 ? 1 : 0;\n};\n\n/**\n * ## Train\n * Train the classifier with a new example, which is\n * a numeric array of features and a 0 or 1 label.\n *\n * @param {Array} features\n * @param {number} label either 0 or 1\n * @returns {PerceptronModel} this\n */\nPerceptronModel.prototype.train = function(features, label) {\n    // Require that only labels of 0 or 1 are considered.\n    if (label !== 0 && label !== 1) { return null; }\n    // The length of the feature array determines\n    // the length of the weight array.\n    // The perceptron will continue learning as long as\n    // it keeps seeing feature arrays of the same length.\n    // When it sees a new data shape, it initializes.\n    if (features.length !== this.weights.length) {\n        this.weights = features;\n        this.bias = 1;\n    }\n    // Make a prediction based on current weights.\n    var prediction = this.predict(features);\n    // Update the weights if the prediction is wrong.\n    if (prediction !== label) {\n        var gradient = label - prediction;\n        for (var i = 0; i < this.weights.length; i++) {\n            this.weights[i] += gradient * features[i];\n        }\n        this.bias += gradient;\n    }\n    return this;\n};\n\nmodule.exports = PerceptronModel;"
+          },
+          "params": [
+            {
+              "title": "param",
+              "description": null,
+              "lineNumber": 6,
+              "type": {
+                "type": "NameExpression",
+                "name": "Array"
+              },
+              "name": "features"
+            }
+          ],
+          "returns": [
+            {
+              "title": "returns",
+              "description": "1 if the score is over 0, otherwise 0",
+              "lineNumber": 7,
+              "type": {
+                "type": "NameExpression",
+                "name": "number"
+              }
+            }
+          ],
+          "name": "predict",
+          "kind": "function",
+          "memberof": "PerceptronModel",
+          "scope": "instance",
+          "members": {
+            "instance": [],
+            "static": []
+          },
+          "events": [],
+          "path": [
+            "PerceptronModel",
+            "predict"
+          ]
+        },
+        {
+          "description": "## Train\nTrain the classifier with a new example, which is\na numeric array of features and a 0 or 1 label.",
+          "tags": [
+            {
+              "title": "param",
+              "description": null,
+              "lineNumber": 5,
+              "type": {
+                "type": "NameExpression",
+                "name": "Array"
+              },
+              "name": "features"
+            },
+            {
+              "title": "param",
+              "description": "either 0 or 1",
+              "lineNumber": 6,
+              "type": {
+                "type": "NameExpression",
+                "name": "number"
+              },
+              "name": "label"
+            },
+            {
+              "title": "returns",
+              "description": "this",
+              "lineNumber": 7,
+              "type": {
+                "type": "NameExpression",
+                "name": "PerceptronModel"
+              }
+            },
+            {
+              "title": "name",
+              "name": "train"
+            },
+            {
+              "title": "kind",
+              "kind": "function"
+            },
+            {
+              "title": "memberof",
+              "description": "PerceptronModel"
+            },
+            {
+              "title": "instance"
+            }
+          ],
+          "loc": {
+            "start": {
+              "line": 47,
+              "column": 0
+            },
+            "end": {
+              "line": 55,
+              "column": 3
+            }
+          },
+          "context": {
+            "loc": {
+              "start": {
+                "line": 56,
+                "column": 0
+              },
+              "end": {
+                "line": 79,
+                "column": 2
+              }
+            },
+            "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/perceptron.js",
+            "code": "'use strict';\n\n/**\n * ## [Perceptron Classifier](http://en.wikipedia.org/wiki/Perceptron)\n *\n * This is a single-layer perceptron classifier that takes\n * arrays of numbers and predicts whether they should be classified\n * as either 0 or 1 (negative or positive examples).\n */\nfunction PerceptronModel() {\n    // The weights, or coefficients of the model;\n    // weights are only populated when training with data.\n    this.weights = [];\n    // The bias term, or intercept; it is also a weight but\n    // it's stored separately for convenience as it is always\n    // multiplied by one.\n    this.bias = 0;\n}\n\n/**\n * ## Predict\n *\n * Use an array of features with the weight array and bias\n * to predict whether an example is labeled 0 or 1.\n *\n * @param {Array} features\n * @returns {number} 1 if the score is over 0, otherwise 0\n */\nPerceptronModel.prototype.predict = function(features) {\n\n    // Only predict if previously trained\n    // on the same size feature array(s).\n    if (features.length !== this.weights.length) { return null; }\n\n    // Calculate the sum of features times weights,\n    // with the bias added (implicitly times one).\n    var score = 0;\n    for (var i = 0; i < this.weights.length; i++) {\n        score += this.weights[i] * features[i];\n    }\n    score += this.bias;\n\n    // Classify as 1 if the score is over 0, otherwise 0.\n    return score > 0 ? 1 : 0;\n};\n\n/**\n * ## Train\n * Train the classifier with a new example, which is\n * a numeric array of features and a 0 or 1 label.\n *\n * @param {Array} features\n * @param {number} label either 0 or 1\n * @returns {PerceptronModel} this\n */\nPerceptronModel.prototype.train = function(features, label) {\n    // Require that only labels of 0 or 1 are considered.\n    if (label !== 0 && label !== 1) { return null; }\n    // The length of the feature array determines\n    // the length of the weight array.\n    // The perceptron will continue learning as long as\n    // it keeps seeing feature arrays of the same length.\n    // When it sees a new data shape, it initializes.\n    if (features.length !== this.weights.length) {\n        this.weights = features;\n        this.bias = 1;\n    }\n    // Make a prediction based on current weights.\n    var prediction = this.predict(features);\n    // Update the weights if the prediction is wrong.\n    if (prediction !== label) {\n        var gradient = label - prediction;\n        for (var i = 0; i < this.weights.length; i++) {\n            this.weights[i] += gradient * features[i];\n        }\n        this.bias += gradient;\n    }\n    return this;\n};\n\nmodule.exports = PerceptronModel;"
+          },
+          "params": [
+            {
+              "title": "param",
+              "description": null,
+              "lineNumber": 5,
+              "type": {
+                "type": "NameExpression",
+                "name": "Array"
+              },
+              "name": "features"
+            },
+            {
+              "title": "param",
+              "description": "either 0 or 1",
+              "lineNumber": 6,
+              "type": {
+                "type": "NameExpression",
+                "name": "number"
+              },
+              "name": "label"
+            }
+          ],
+          "returns": [
+            {
+              "title": "returns",
+              "description": "this",
+              "lineNumber": 7,
+              "type": {
+                "type": "NameExpression",
+                "name": "PerceptronModel"
+              }
+            }
+          ],
+          "name": "train",
+          "kind": "function",
+          "memberof": "PerceptronModel",
+          "scope": "instance",
+          "members": {
+            "instance": [],
+            "static": []
+          },
+          "events": [],
+          "path": [
+            "PerceptronModel",
+            "train"
+          ]
+        }
+      ],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "PerceptronModel"
+    ]
+  },
+  {
+    "description": "The [Bernoulli distribution](http://en.wikipedia.org/wiki/Bernoulli_distribution)\nis the probability discrete\ndistribution of a random variable which takes value 1 with success\nprobability `p` and value 0 with failure\nprobability `q` = 1 - `p`. It can be used, for example, to represent the\ntoss of a coin, where \"1\" is defined to mean \"heads\" and \"0\" is defined\nto mean \"tails\" (or vice versa). It is\na special case of a Binomial Distribution\nwhere `n` = 1.",
+    "tags": [
+      {
+        "title": "param",
+        "description": "input value, between 0 and 1 inclusive",
+        "lineNumber": 11,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "p"
+      },
+      {
+        "title": "returns",
+        "description": "value of bernoulli distribution at this point",
+        "lineNumber": 12,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "bernoulliDistribution"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 5,
+        "column": 0
+      },
+      "end": {
+        "line": 18,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 19,
+          "column": 0
+        },
+        "end": {
+          "line": 24,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/bernoulli_distribution.js",
+      "code": "'use strict';\n\nvar binomialDistribution = require('./binomial_distribution');\n\n/**\n * The [Bernoulli distribution](http://en.wikipedia.org/wiki/Bernoulli_distribution)\n * is the probability discrete\n * distribution of a random variable which takes value 1 with success\n * probability `p` and value 0 with failure\n * probability `q` = 1 - `p`. It can be used, for example, to represent the\n * toss of a coin, where \"1\" is defined to mean \"heads\" and \"0\" is defined\n * to mean \"tails\" (or vice versa). It is\n * a special case of a Binomial Distribution\n * where `n` = 1.\n *\n * @param {number} p input value, between 0 and 1 inclusive\n * @returns {number} value of bernoulli distribution at this point\n */\nfunction bernoulliDistribution(p) {\n    // Check that `p` is a valid probability (0 ≤ p ≤ 1)\n    if (p < 0 || p > 1 ) { return null; }\n\n    return binomialDistribution(1, p);\n}\n\nmodule.exports = bernoulliDistribution;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "input value, between 0 and 1 inclusive",
+        "lineNumber": 11,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "p"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "value of bernoulli distribution at this point",
+        "lineNumber": 12,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "bernoulliDistribution",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "bernoulliDistribution"
+    ]
+  },
+  {
+    "description": "The [Binomial Distribution](http://en.wikipedia.org/wiki/Binomial_distribution) is the discrete probability\ndistribution of the number of successes in a sequence of n independent yes/no experiments, each of which yields\nsuccess with probability `probability`. Such a success/failure experiment is also called a Bernoulli experiment or\nBernoulli trial; when trials = 1, the Binomial Distribution is a Bernoulli Distribution.",
+    "tags": [
+      {
+        "title": "param",
+        "description": "number of trials to simulate",
+        "lineNumber": 6,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "trials"
+      },
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 7,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "probability"
+      },
+      {
+        "title": "returns",
+        "description": "output",
+        "lineNumber": 8,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "binomialDistribution"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 6,
+        "column": 0
+      },
+      "end": {
+        "line": 15,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 16,
+          "column": 0
+        },
+        "end": {
+          "line": 49,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/binomial_distribution.js",
+      "code": "'use strict';\n\nvar epsilon = require('./epsilon');\nvar factorial = require('./factorial');\n\n/**\n * The [Binomial Distribution](http://en.wikipedia.org/wiki/Binomial_distribution) is the discrete probability\n * distribution of the number of successes in a sequence of n independent yes/no experiments, each of which yields\n * success with probability `probability`. Such a success/failure experiment is also called a Bernoulli experiment or\n * Bernoulli trial; when trials = 1, the Binomial Distribution is a Bernoulli Distribution.\n *\n * @param {number} trials number of trials to simulate\n * @param {number} probability\n * @returns {number} output\n */\nfunction binomialDistribution(trials, probability) {\n    // Check that `p` is a valid probability (0 ≤ p ≤ 1),\n    // that `n` is an integer, strictly positive.\n    if (probability < 0 || probability > 1 ||\n        trials <= 0 || trials % 1 !== 0) {\n        return null;\n    }\n\n    // We initialize `x`, the random variable, and `accumulator`, an accumulator\n    // for the cumulative distribution function to 0. `distribution_functions`\n    // is the object we'll return with the `probability_of_x` and the\n    // `cumulativeProbability_of_x`, as well as the calculated mean &\n    // variance. We iterate until the `cumulativeProbability_of_x` is\n    // within `epsilon` of 1.0.\n    var x = 0,\n        cumulativeProbability = 0,\n        cells = {};\n\n    // This algorithm iterates through each potential outcome,\n    // until the `cumulativeProbability` is very close to 1, at\n    // which point we've defined the vast majority of outcomes\n    do {\n        // a [probability mass function](https://en.wikipedia.org/wiki/Probability_mass_function)\n        cells[x] = factorial(trials) /\n            (factorial(x) * factorial(trials - x)) *\n            (Math.pow(probability, x) * Math.pow(1 - probability, trials - x));\n        cumulativeProbability += cells[x];\n        x++;\n    // when the cumulativeProbability is nearly 1, we've calculated\n    // the useful range of this distribution\n    } while (cumulativeProbability < 1 - epsilon);\n\n    return cells;\n}\n\nmodule.exports = binomialDistribution;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "number of trials to simulate",
+        "lineNumber": 6,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "trials"
+      },
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 7,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "probability"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "output",
+        "lineNumber": 8,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "binomialDistribution",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "binomialDistribution"
+    ]
+  },
+  {
+    "description": "## Percentage Points of the χ2 (Chi-Squared) Distribution\n\nThe [χ2 (Chi-Squared) Distribution](http://en.wikipedia.org/wiki/Chi-squared_distribution) is used in the common\nchi-squared tests for goodness of fit of an observed distribution to a theoretical one, the independence of two\ncriteria of classification of qualitative data, and in confidence interval estimation for a population standard\ndeviation of a normal distribution from a sample standard deviation.\n\nValues from Appendix 1, Table III of William W. Hines & Douglas C. Montgomery, \"Probability and Statistics in\nEngineering and Management Science\", Wiley (1980).",
+    "tags": [
+      {
+        "title": "name",
+        "name": "chiSquaredDistributionTable"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 3,
+        "column": 0
+      },
+      "end": {
+        "line": 13,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 14,
+          "column": 0
+        },
+        "end": {
+          "line": 52,
+          "column": 2
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/chi_squared_distribution_table.js",
+      "code": "'use strict';\n\n/**\n * ## Percentage Points of the χ2 (Chi-Squared) Distribution\n *\n * The [χ2 (Chi-Squared) Distribution](http://en.wikipedia.org/wiki/Chi-squared_distribution) is used in the common\n * chi-squared tests for goodness of fit of an observed distribution to a theoretical one, the independence of two\n * criteria of classification of qualitative data, and in confidence interval estimation for a population standard\n * deviation of a normal distribution from a sample standard deviation.\n *\n * Values from Appendix 1, Table III of William W. Hines & Douglas C. Montgomery, \"Probability and Statistics in\n * Engineering and Management Science\", Wiley (1980).\n */\nvar chiSquaredDistributionTable = {\n    1: { 0.995:  0.00, 0.99:  0.00, 0.975:  0.00, 0.95:  0.00, 0.9:  0.02, 0.5:  0.45, 0.1:  2.71, 0.05:  3.84, 0.025:  5.02, 0.01:  6.63, 0.005:  7.88 },\n    2: { 0.995:  0.01, 0.99:  0.02, 0.975:  0.05, 0.95:  0.10, 0.9:  0.21, 0.5:  1.39, 0.1:  4.61, 0.05:  5.99, 0.025:  7.38, 0.01:  9.21, 0.005: 10.60 },\n    3: { 0.995:  0.07, 0.99:  0.11, 0.975:  0.22, 0.95:  0.35, 0.9:  0.58, 0.5:  2.37, 0.1:  6.25, 0.05:  7.81, 0.025:  9.35, 0.01: 11.34, 0.005: 12.84 },\n    4: { 0.995:  0.21, 0.99:  0.30, 0.975:  0.48, 0.95:  0.71, 0.9:  1.06, 0.5:  3.36, 0.1:  7.78, 0.05:  9.49, 0.025: 11.14, 0.01: 13.28, 0.005: 14.86 },\n    5: { 0.995:  0.41, 0.99:  0.55, 0.975:  0.83, 0.95:  1.15, 0.9:  1.61, 0.5:  4.35, 0.1:  9.24, 0.05: 11.07, 0.025: 12.83, 0.01: 15.09, 0.005: 16.75 },\n    6: { 0.995:  0.68, 0.99:  0.87, 0.975:  1.24, 0.95:  1.64, 0.9:  2.20, 0.5:  5.35, 0.1: 10.65, 0.05: 12.59, 0.025: 14.45, 0.01: 16.81, 0.005: 18.55 },\n    7: { 0.995:  0.99, 0.99:  1.25, 0.975:  1.69, 0.95:  2.17, 0.9:  2.83, 0.5:  6.35, 0.1: 12.02, 0.05: 14.07, 0.025: 16.01, 0.01: 18.48, 0.005: 20.28 },\n    8: { 0.995:  1.34, 0.99:  1.65, 0.975:  2.18, 0.95:  2.73, 0.9:  3.49, 0.5:  7.34, 0.1: 13.36, 0.05: 15.51, 0.025: 17.53, 0.01: 20.09, 0.005: 21.96 },\n    9: { 0.995:  1.73, 0.99:  2.09, 0.975:  2.70, 0.95:  3.33, 0.9:  4.17, 0.5:  8.34, 0.1: 14.68, 0.05: 16.92, 0.025: 19.02, 0.01: 21.67, 0.005: 23.59 },\n    10: { 0.995:  2.16, 0.99:  2.56, 0.975:  3.25, 0.95:  3.94, 0.9:  4.87, 0.5:  9.34, 0.1: 15.99, 0.05: 18.31, 0.025: 20.48, 0.01: 23.21, 0.005: 25.19 },\n    11: { 0.995:  2.60, 0.99:  3.05, 0.975:  3.82, 0.95:  4.57, 0.9:  5.58, 0.5: 10.34, 0.1: 17.28, 0.05: 19.68, 0.025: 21.92, 0.01: 24.72, 0.005: 26.76 },\n    12: { 0.995:  3.07, 0.99:  3.57, 0.975:  4.40, 0.95:  5.23, 0.9:  6.30, 0.5: 11.34, 0.1: 18.55, 0.05: 21.03, 0.025: 23.34, 0.01: 26.22, 0.005: 28.30 },\n    13: { 0.995:  3.57, 0.99:  4.11, 0.975:  5.01, 0.95:  5.89, 0.9:  7.04, 0.5: 12.34, 0.1: 19.81, 0.05: 22.36, 0.025: 24.74, 0.01: 27.69, 0.005: 29.82 },\n    14: { 0.995:  4.07, 0.99:  4.66, 0.975:  5.63, 0.95:  6.57, 0.9:  7.79, 0.5: 13.34, 0.1: 21.06, 0.05: 23.68, 0.025: 26.12, 0.01: 29.14, 0.005: 31.32 },\n    15: { 0.995:  4.60, 0.99:  5.23, 0.975:  6.27, 0.95:  7.26, 0.9:  8.55, 0.5: 14.34, 0.1: 22.31, 0.05: 25.00, 0.025: 27.49, 0.01: 30.58, 0.005: 32.80 },\n    16: { 0.995:  5.14, 0.99:  5.81, 0.975:  6.91, 0.95:  7.96, 0.9:  9.31, 0.5: 15.34, 0.1: 23.54, 0.05: 26.30, 0.025: 28.85, 0.01: 32.00, 0.005: 34.27 },\n    17: { 0.995:  5.70, 0.99:  6.41, 0.975:  7.56, 0.95:  8.67, 0.9: 10.09, 0.5: 16.34, 0.1: 24.77, 0.05: 27.59, 0.025: 30.19, 0.01: 33.41, 0.005: 35.72 },\n    18: { 0.995:  6.26, 0.99:  7.01, 0.975:  8.23, 0.95:  9.39, 0.9: 10.87, 0.5: 17.34, 0.1: 25.99, 0.05: 28.87, 0.025: 31.53, 0.01: 34.81, 0.005: 37.16 },\n    19: { 0.995:  6.84, 0.99:  7.63, 0.975:  8.91, 0.95: 10.12, 0.9: 11.65, 0.5: 18.34, 0.1: 27.20, 0.05: 30.14, 0.025: 32.85, 0.01: 36.19, 0.005: 38.58 },\n    20: { 0.995:  7.43, 0.99:  8.26, 0.975:  9.59, 0.95: 10.85, 0.9: 12.44, 0.5: 19.34, 0.1: 28.41, 0.05: 31.41, 0.025: 34.17, 0.01: 37.57, 0.005: 40.00 },\n    21: { 0.995:  8.03, 0.99:  8.90, 0.975: 10.28, 0.95: 11.59, 0.9: 13.24, 0.5: 20.34, 0.1: 29.62, 0.05: 32.67, 0.025: 35.48, 0.01: 38.93, 0.005: 41.40 },\n    22: { 0.995:  8.64, 0.99:  9.54, 0.975: 10.98, 0.95: 12.34, 0.9: 14.04, 0.5: 21.34, 0.1: 30.81, 0.05: 33.92, 0.025: 36.78, 0.01: 40.29, 0.005: 42.80 },\n    23: { 0.995:  9.26, 0.99: 10.20, 0.975: 11.69, 0.95: 13.09, 0.9: 14.85, 0.5: 22.34, 0.1: 32.01, 0.05: 35.17, 0.025: 38.08, 0.01: 41.64, 0.005: 44.18 },\n    24: { 0.995:  9.89, 0.99: 10.86, 0.975: 12.40, 0.95: 13.85, 0.9: 15.66, 0.5: 23.34, 0.1: 33.20, 0.05: 36.42, 0.025: 39.36, 0.01: 42.98, 0.005: 45.56 },\n    25: { 0.995: 10.52, 0.99: 11.52, 0.975: 13.12, 0.95: 14.61, 0.9: 16.47, 0.5: 24.34, 0.1: 34.28, 0.05: 37.65, 0.025: 40.65, 0.01: 44.31, 0.005: 46.93 },\n    26: { 0.995: 11.16, 0.99: 12.20, 0.975: 13.84, 0.95: 15.38, 0.9: 17.29, 0.5: 25.34, 0.1: 35.56, 0.05: 38.89, 0.025: 41.92, 0.01: 45.64, 0.005: 48.29 },\n    27: { 0.995: 11.81, 0.99: 12.88, 0.975: 14.57, 0.95: 16.15, 0.9: 18.11, 0.5: 26.34, 0.1: 36.74, 0.05: 40.11, 0.025: 43.19, 0.01: 46.96, 0.005: 49.65 },\n    28: { 0.995: 12.46, 0.99: 13.57, 0.975: 15.31, 0.95: 16.93, 0.9: 18.94, 0.5: 27.34, 0.1: 37.92, 0.05: 41.34, 0.025: 44.46, 0.01: 48.28, 0.005: 50.99 },\n    29: { 0.995: 13.12, 0.99: 14.26, 0.975: 16.05, 0.95: 17.71, 0.9: 19.77, 0.5: 28.34, 0.1: 39.09, 0.05: 42.56, 0.025: 45.72, 0.01: 49.59, 0.005: 52.34 },\n    30: { 0.995: 13.79, 0.99: 14.95, 0.975: 16.79, 0.95: 18.49, 0.9: 20.60, 0.5: 29.34, 0.1: 40.26, 0.05: 43.77, 0.025: 46.98, 0.01: 50.89, 0.005: 53.67 },\n    40: { 0.995: 20.71, 0.99: 22.16, 0.975: 24.43, 0.95: 26.51, 0.9: 29.05, 0.5: 39.34, 0.1: 51.81, 0.05: 55.76, 0.025: 59.34, 0.01: 63.69, 0.005: 66.77 },\n    50: { 0.995: 27.99, 0.99: 29.71, 0.975: 32.36, 0.95: 34.76, 0.9: 37.69, 0.5: 49.33, 0.1: 63.17, 0.05: 67.50, 0.025: 71.42, 0.01: 76.15, 0.005: 79.49 },\n    60: { 0.995: 35.53, 0.99: 37.48, 0.975: 40.48, 0.95: 43.19, 0.9: 46.46, 0.5: 59.33, 0.1: 74.40, 0.05: 79.08, 0.025: 83.30, 0.01: 88.38, 0.005: 91.95 },\n    70: { 0.995: 43.28, 0.99: 45.44, 0.975: 48.76, 0.95: 51.74, 0.9: 55.33, 0.5: 69.33, 0.1: 85.53, 0.05: 90.53, 0.025: 95.02, 0.01: 100.42, 0.005: 104.22 },\n    80: { 0.995: 51.17, 0.99: 53.54, 0.975: 57.15, 0.95: 60.39, 0.9: 64.28, 0.5: 79.33, 0.1: 96.58, 0.05: 101.88, 0.025: 106.63, 0.01: 112.33, 0.005: 116.32 },\n    90: { 0.995: 59.20, 0.99: 61.75, 0.975: 65.65, 0.95: 69.13, 0.9: 73.29, 0.5: 89.33, 0.1: 107.57, 0.05: 113.14, 0.025: 118.14, 0.01: 124.12, 0.005: 128.30 },\n    100: { 0.995: 67.33, 0.99: 70.06, 0.975: 74.22, 0.95: 77.93, 0.9: 82.36, 0.5: 99.33, 0.1: 118.50, 0.05: 124.34, 0.025: 129.56, 0.01: 135.81, 0.005: 140.17 }\n};\n\nmodule.exports = chiSquaredDistributionTable;"
+    },
+    "name": "chiSquaredDistributionTable",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "chiSquaredDistributionTable"
+    ]
+  },
+  {
+    "description": "The [χ2 (Chi-Squared) Goodness-of-Fit Test](http://en.wikipedia.org/wiki/Goodness_of_fit#Pearson.27s_chi-squared_test)\nuses a measure of goodness of fit which is the sum of differences between observed and expected outcome frequencies\n(that is, counts of observations), each squared and divided by the number of observations expected given the\nhypothesized distribution. The resulting χ2 statistic, `chiSquared`, can be compared to the chi-squared distribution\nto determine the goodness of fit. In order to determine the degrees of freedom of the chi-squared distribution, one\ntakes the total number of observed frequencies and subtracts the number of estimated parameters. The test statistic\nfollows, approximately, a chi-square distribution with (k − c) degrees of freedom where `k` is the number of non-empty\ncells and `c` is the number of estimated parameters for the distribution.",
+    "tags": [
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 10,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "data"
+      },
+      {
+        "title": "param",
+        "description": "a function that returns a point in a distribution:\nfor instance, binomial, bernoulli, or poisson",
+        "lineNumber": 11,
+        "type": {
+          "type": "NameExpression",
+          "name": "Function"
+        },
+        "name": "distributionType"
+      },
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 13,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "significance"
+      },
+      {
+        "title": "returns",
+        "description": "chi squared goodness of fit",
+        "lineNumber": 14,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "chiSquaredGoodnessOfFit"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 6,
+        "column": 0
+      },
+      "end": {
+        "line": 21,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 22,
+          "column": 0
+        },
+        "end": {
+          "line": 92,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/chi_squared_goodness_of_fit.js",
+      "code": "'use strict';\n\nvar mean = require('./mean');\nvar chiSquaredDistributionTable = require('./chi_squared_distribution_table');\n\n/**\n * The [χ2 (Chi-Squared) Goodness-of-Fit Test](http://en.wikipedia.org/wiki/Goodness_of_fit#Pearson.27s_chi-squared_test)\n * uses a measure of goodness of fit which is the sum of differences between observed and expected outcome frequencies\n * (that is, counts of observations), each squared and divided by the number of observations expected given the\n * hypothesized distribution. The resulting χ2 statistic, `chiSquared`, can be compared to the chi-squared distribution\n * to determine the goodness of fit. In order to determine the degrees of freedom of the chi-squared distribution, one\n * takes the total number of observed frequencies and subtracts the number of estimated parameters. The test statistic\n * follows, approximately, a chi-square distribution with (k − c) degrees of freedom where `k` is the number of non-empty\n * cells and `c` is the number of estimated parameters for the distribution.\n *\n * @param {Array<number>} data\n * @param {Function} distributionType a function that returns a point in a distribution:\n * for instance, binomial, bernoulli, or poisson\n * @param {number} significance\n * @returns {number} chi squared goodness of fit\n */\nfunction chiSquaredGoodnessOfFit(data, distributionType, significance) {\n    // Estimate from the sample data, a weighted mean.\n    var inputMean = mean(data),\n        // Calculated value of the χ2 statistic.\n        chiSquared = 0,\n        // Degrees of freedom, calculated as (number of class intervals -\n        // number of hypothesized distribution parameters estimated - 1)\n        degreesOfFreedom,\n        // Number of hypothesized distribution parameters estimated, expected to be supplied in the distribution test.\n        // Lose one degree of freedom for estimating `lambda` from the sample data.\n        c = 1,\n        // The hypothesized distribution.\n        // Generate the hypothesized distribution.\n        hypothesizedDistribution = distributionType(inputMean),\n        observedFrequencies = [],\n        expectedFrequencies = [],\n        k;\n\n    // Create an array holding a histogram from the sample data, of\n    // the form `{ value: numberOfOcurrences }`\n    for (var i = 0; i < data.length; i++) {\n        if (observedFrequencies[data[i]] === undefined) {\n            observedFrequencies[data[i]] = 0;\n        }\n        observedFrequencies[data[i]]++;\n    }\n\n    // The histogram we created might be sparse - there might be gaps\n    // between values. So we iterate through the histogram, making\n    // sure that instead of undefined, gaps have 0 values.\n    for (i = 0; i < observedFrequencies.length; i++) {\n        if (observedFrequencies[i] === undefined) {\n            observedFrequencies[i] = 0;\n        }\n    }\n\n    // Create an array holding a histogram of expected data given the\n    // sample size and hypothesized distribution.\n    for (k in hypothesizedDistribution) {\n        if (k in observedFrequencies) {\n            expectedFrequencies[k] = hypothesizedDistribution[k] * data.length;\n        }\n    }\n\n    // Working backward through the expected frequencies, collapse classes\n    // if less than three observations are expected for a class.\n    // This transformation is applied to the observed frequencies as well.\n    for (k = expectedFrequencies.length - 1; k >= 0; k--) {\n        if (expectedFrequencies[k] < 3) {\n            expectedFrequencies[k - 1] += expectedFrequencies[k];\n            expectedFrequencies.pop();\n\n            observedFrequencies[k - 1] += observedFrequencies[k];\n            observedFrequencies.pop();\n        }\n    }\n\n    // Iterate through the squared differences between observed & expected\n    // frequencies, accumulating the `chiSquared` statistic.\n    for (k = 0; k < observedFrequencies.length; k++) {\n        chiSquared += Math.pow(\n            observedFrequencies[k] - expectedFrequencies[k], 2) /\n            expectedFrequencies[k];\n    }\n\n    // Calculate degrees of freedom for this test and look it up in the\n    // `chiSquaredDistributionTable` in order to\n    // accept or reject the goodness-of-fit of the hypothesized distribution.\n    degreesOfFreedom = observedFrequencies.length - c - 1;\n    return chiSquaredDistributionTable[degreesOfFreedom][significance] < chiSquared;\n}\n\nmodule.exports = chiSquaredGoodnessOfFit;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 10,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "data"
+      },
+      {
+        "title": "param",
+        "description": "a function that returns a point in a distribution:\nfor instance, binomial, bernoulli, or poisson",
+        "lineNumber": 11,
+        "type": {
+          "type": "NameExpression",
+          "name": "Function"
+        },
+        "name": "distributionType"
+      },
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 13,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "significance"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "chi squared goodness of fit",
+        "lineNumber": 14,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "chiSquaredGoodnessOfFit",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "chiSquaredGoodnessOfFit"
+    ]
+  },
+  {
+    "description": "Split an array into chunks of a specified size. This function\nhas the same behavior as [PHP's array_chunk](http://php.net/manual/en/function.array-chunk.php)\nfunction, and thus will insert smaller-sized chunks at the end if\nthe input size is not divisible by the chunk size.\n\n`sample` is expected to be an array, and `chunkSize` a number.\nThe `sample` array can contain any kind of data.",
+    "tags": [
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 9,
+        "type": {
+          "type": "NameExpression",
+          "name": "Array"
+        },
+        "name": "sample"
+      },
+      {
+        "title": "param",
+        "description": "size of each output array",
+        "lineNumber": 10,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "chunkSize"
+      },
+      {
+        "title": "example",
+        "description": "console.log(chunk([1, 2, 3, 4], 2)); // [[1, 2], [3, 4]]",
+        "lineNumber": 11
+      },
+      {
+        "title": "name",
+        "name": "chunk"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 3,
+        "column": 0
+      },
+      "end": {
+        "line": 16,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 17,
+          "column": 0
+        },
+        "end": {
+          "line": 40,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/chunk.js",
+      "code": "'use strict';\n\n/**\n * Split an array into chunks of a specified size. This function\n * has the same behavior as [PHP's array_chunk](http://php.net/manual/en/function.array-chunk.php)\n * function, and thus will insert smaller-sized chunks at the end if\n * the input size is not divisible by the chunk size.\n *\n * `sample` is expected to be an array, and `chunkSize` a number.\n * The `sample` array can contain any kind of data.\n *\n * @param {Array} sample\n * @param {number} chunkSize size of each output array\n * @example\n * console.log(chunk([1, 2, 3, 4], 2)); // [[1, 2], [3, 4]]\n */\nfunction chunk(sample, chunkSize) {\n\n    // a list of result chunks, as arrays in an array\n    var output = [];\n\n    // `chunkSize` must be zero or higher - otherwise the loop below,\n    // in which we call `start += chunkSize`, will loop infinitely.\n    // So, we'll detect and return null in that case to indicate\n    // invalid input.\n    if (chunkSize <= 0) {\n        return null;\n    }\n\n    // `start` is the index at which `.slice` will start selecting\n    // new array elements\n    for (var start = 0; start < sample.length; start += chunkSize) {\n\n        // for each chunk, slice that part of the array and add it\n        // to the output. The `.slice` function does not change\n        // the original array.\n        output.push(sample.slice(start, start + chunkSize));\n    }\n    return output;\n}\n\nmodule.exports = chunk;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 9,
+        "type": {
+          "type": "NameExpression",
+          "name": "Array"
+        },
+        "name": "sample"
+      },
+      {
+        "title": "param",
+        "description": "size of each output array",
+        "lineNumber": 10,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "chunkSize"
+      }
+    ],
+    "examples": [
+      "<span class=\"hljs-built_in\">console</span>.log(chunk([<span class=\"hljs-number\">1</span>, <span class=\"hljs-number\">2</span>, <span class=\"hljs-number\">3</span>, <span class=\"hljs-number\">4</span>], <span class=\"hljs-number\">2</span>)); <span class=\"hljs-comment\">// [[1, 2], [3, 4]]</span>"
+    ],
+    "name": "chunk",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "chunk"
+    ]
+  },
+  {
+    "description": "## [Cumulative Standard Normal Probability](http://en.wikipedia.org/wiki/Standard_normal_table)\n\nSince probability tables cannot be\nprinted for every normal distribution, as there are an infinite variety\nof normal distributions, it is common practice to convert a normal to a\nstandard normal and then use the standard normal table to find probabilities.\n\nYou can use `.5 + .5 * errorFunction(x / Math.sqrt(2))` to calculate the probability\ninstead of looking it up in a table.",
+    "tags": [
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 11,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "z"
+      },
+      {
+        "title": "returns",
+        "description": "cumulative standard normal probability",
+        "lineNumber": 12,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "cumulativeStdNormalProbability"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 5,
+        "column": 0
+      },
+      "end": {
+        "line": 18,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 19,
+          "column": 0
+        },
+        "end": {
+          "line": 40,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/cumulative_std_normal_probability.js",
+      "code": "'use strict';\n\nvar standardNormalTable = require('./standard_normal_table');\n\n/**\n * ## [Cumulative Standard Normal Probability](http://en.wikipedia.org/wiki/Standard_normal_table)\n *\n * Since probability tables cannot be\n * printed for every normal distribution, as there are an infinite variety\n * of normal distributions, it is common practice to convert a normal to a\n * standard normal and then use the standard normal table to find probabilities.\n *\n * You can use `.5 + .5 * errorFunction(x / Math.sqrt(2))` to calculate the probability\n * instead of looking it up in a table.\n *\n * @param {number} z\n * @returns {number} cumulative standard normal probability\n */\nfunction cumulativeStdNormalProbability(z) {\n\n    // Calculate the position of this value.\n    var absZ = Math.abs(z),\n        // Each row begins with a different\n        // significant digit: 0.5, 0.6, 0.7, and so on. Each value in the table\n        // corresponds to a range of 0.01 in the input values, so the value is\n        // multiplied by 100.\n        index = Math.min(Math.round(absZ * 100), standardNormalTable.length - 1);\n\n    // The index we calculate must be in the table as a positive value,\n    // but we still pay attention to whether the input is positive\n    // or negative, and flip the output value as a last step.\n    if (z >= 0) {\n        return standardNormalTable[index];\n    } else {\n        // due to floating-point arithmetic, values in the table with\n        // 4 significant figures can nevertheless end up as repeating\n        // fractions when they're computed here.\n        return +(1 - standardNormalTable[index]).toFixed(4);\n    }\n}\n\nmodule.exports = cumulativeStdNormalProbability;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 11,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "z"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "cumulative standard normal probability",
+        "lineNumber": 12,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "cumulativeStdNormalProbability",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "cumulativeStdNormalProbability"
+    ]
+  },
+  {
+    "description": "We use `ε`, epsilon, as a stopping criterion when we want to iterate\nuntil we're \"close enough\".",
+    "tags": [
+      {
+        "title": "name",
+        "name": "epsilon"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 3,
+        "column": 0
+      },
+      "end": {
+        "line": 6,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 7,
+          "column": 0
+        },
+        "end": {
+          "line": 7,
+          "column": 21
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/epsilon.js",
+      "code": "'use strict';\n\n/**\n * We use `ε`, epsilon, as a stopping criterion when we want to iterate\n * until we're \"close enough\".\n */\nvar epsilon = 0.0001;\n\nmodule.exports = epsilon;"
+    },
+    "name": "epsilon",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "epsilon"
+    ]
+  },
+  {
+    "description": "## [Gaussian error function](http://en.wikipedia.org/wiki/Error_function)\n\nThe `errorFunction(x/(sd * Math.sqrt(2)))` is the probability that a value in a\nnormal distribution with standard deviation sd is within x of the mean.\n\nThis function returns a numerical approximation to the exact value.",
+    "tags": [
+      {
+        "title": "param",
+        "description": "input",
+        "lineNumber": 8,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "x"
+      },
+      {
+        "title": "returns",
+        "description": null,
+        "lineNumber": 9,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "errorFunction"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 3,
+        "column": 0
+      },
+      "end": {
+        "line": 13,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 14,
+          "column": 0
+        },
+        "end": {
+          "line": 32,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/error_function.js",
+      "code": "'use strict';\n\n/**\n * ## [Gaussian error function](http://en.wikipedia.org/wiki/Error_function)\n *\n * The `errorFunction(x/(sd * Math.sqrt(2)))` is the probability that a value in a\n * normal distribution with standard deviation sd is within x of the mean.\n *\n * This function returns a numerical approximation to the exact value.\n *\n * @param {number} x input\n * @return {number}\n */\nfunction errorFunction(x) {\n    var t = 1 / (1 + 0.5 * Math.abs(x));\n    var tau = t * Math.exp(-Math.pow(x, 2) -\n        1.26551223 +\n        1.00002368 * t +\n        0.37409196 * Math.pow(t, 2) +\n        0.09678418 * Math.pow(t, 3) -\n        0.18628806 * Math.pow(t, 4) +\n        0.27886807 * Math.pow(t, 5) -\n        1.13520398 * Math.pow(t, 6) +\n        1.48851587 * Math.pow(t, 7) -\n        0.82215223 * Math.pow(t, 8) +\n        0.17087277 * Math.pow(t, 9));\n    if (x >= 0) {\n        return 1 - tau;\n    } else {\n        return tau - 1;\n    }\n}\n\nmodule.exports = errorFunction;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "input",
+        "lineNumber": 8,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "x"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": null,
+        "lineNumber": 9,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "errorFunction",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "errorFunction"
+    ]
+  },
+  {
+    "description": "## [Factorial](https://en.wikipedia.org/wiki/Factorial)\n\nA factorial, usually written n!, is the product of all positive\nintegers less than or equal to n. Often factorial is implemented\nrecursively, but this iterative approach is significantly faster\nand simpler.",
+    "tags": [
+      {
+        "title": "param",
+        "description": "input",
+        "lineNumber": 8,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "n"
+      },
+      {
+        "title": "returns",
+        "description": "factorial: n!",
+        "lineNumber": 9,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "example",
+        "description": "console.log(factorial(5)); // 120",
+        "lineNumber": 10
+      },
+      {
+        "title": "name",
+        "name": "factorial"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 3,
+        "column": 0
+      },
+      "end": {
+        "line": 15,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 16,
+          "column": 0
+        },
+        "end": {
+          "line": 32,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/factorial.js",
+      "code": "'use strict';\n\n/**\n * ## [Factorial](https://en.wikipedia.org/wiki/Factorial)\n *\n * A factorial, usually written n!, is the product of all positive\n * integers less than or equal to n. Often factorial is implemented\n * recursively, but this iterative approach is significantly faster\n * and simpler.\n *\n * @param {number} n input\n * @returns {number} factorial: n!\n * @example\n * console.log(factorial(5)); // 120\n */\nfunction factorial(n) {\n\n    // factorial is mathematically undefined for negative numbers\n    if (n < 0 ) { return null; }\n\n    // typically you'll expand the factorial function going down, like\n    // 5! = 5 * 4 * 3 * 2 * 1. This is going in the opposite direction,\n    // counting from 2 up to the number in question, and since anything\n    // multiplied by 1 is itself, the loop only needs to start at 2.\n    var accumulator = 1;\n    for (var i = 2; i <= n; i++) {\n        // for each number up to and including the number `n`, multiply\n        // the accumulator my that number.\n        accumulator *= i;\n    }\n    return accumulator;\n}\n\nmodule.exports = factorial;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "input",
+        "lineNumber": 8,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "n"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "factorial: n!",
+        "lineNumber": 9,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "examples": [
+      "<span class=\"hljs-built_in\">console</span>.log(factorial(<span class=\"hljs-number\">5</span>)); <span class=\"hljs-comment\">// 120</span>"
+    ],
+    "name": "factorial",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "factorial"
+    ]
+  },
+  {
+    "description": "The [Geometric Mean](https://en.wikipedia.org/wiki/Geometric_mean) is\na mean function that is more useful for numbers in different\nranges.\n\nthis is the nth root of the input numbers multiplied by each other\n\nThis runs on `O(n)`, linear time in respect to the array",
+    "tags": [
+      {
+        "title": "param",
+        "description": "input array",
+        "lineNumber": 9,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      },
+      {
+        "title": "returns",
+        "description": "geometric mean",
+        "lineNumber": 10,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "geometricMean"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 3,
+        "column": 0
+      },
+      "end": {
+        "line": 14,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 15,
+          "column": 0
+        },
+        "end": {
+          "line": 31,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/geometric_mean.js",
+      "code": "'use strict';\n\n/**\n * The [Geometric Mean](https://en.wikipedia.org/wiki/Geometric_mean) is\n * a mean function that is more useful for numbers in different\n * ranges.\n *\n * this is the nth root of the input numbers multiplied by each other\n *\n * This runs on `O(n)`, linear time in respect to the array\n *\n * @param {Array<number>} x input array\n * @returns {number} geometric mean\n */\nfunction geometricMean(x) {\n    // The mean of no numbers is null\n    if (x.length === 0) { return null; }\n\n    // the starting value.\n    var value = 1;\n\n    for (var i = 0; i < x.length; i++) {\n        // the geometric mean is only valid for positive numbers\n        if (x[i] <= 0) { return null; }\n\n        // repeatedly multiply the value by each number\n        value *= x[i];\n    }\n\n    return Math.pow(value, 1 / x.length);\n}\n\nmodule.exports = geometricMean;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "input array",
+        "lineNumber": 9,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "geometric mean",
+        "lineNumber": 10,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "geometricMean",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "geometricMean"
+    ]
+  },
+  {
+    "description": "The [Harmonic Mean](https://en.wikipedia.org/wiki/Harmonic_mean) is\na mean function typically used to find the average of rates\n\nthis is the reciprocal of the arithmetic mean of the reciprocals\nof the input numbers\n\nThis runs on `O(n)`, linear time in respect to the array",
+    "tags": [
+      {
+        "title": "param",
+        "description": "input",
+        "lineNumber": 9,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      },
+      {
+        "title": "returns",
+        "description": "harmonic mean",
+        "lineNumber": 10,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "harmonicMean"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 3,
+        "column": 0
+      },
+      "end": {
+        "line": 14,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 15,
+          "column": 0
+        },
+        "end": {
+          "line": 30,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/harmonic_mean.js",
+      "code": "'use strict';\n\n/**\n * The [Harmonic Mean](https://en.wikipedia.org/wiki/Harmonic_mean) is\n * a mean function typically used to find the average of rates\n *\n * this is the reciprocal of the arithmetic mean of the reciprocals\n * of the input numbers\n *\n * This runs on `O(n)`, linear time in respect to the array\n *\n * @param {Array<number>} x input\n * @returns {number} harmonic mean\n */\nfunction harmonicMean(x) {\n    // The mean of no numbers is null\n    if (x.length === 0) { return null; }\n\n    var reciprocalSum = 0;\n\n    for (var i = 0; i < x.length; i++) {\n        // the harmonic mean is only valid for positive numbers\n        if (x[i] <= 0) { return null; }\n\n        reciprocalSum += 1 / x[i];\n    }\n\n    // divide n by the the reciprocal sum\n    return x.length / reciprocalSum;\n}\n\nmodule.exports = harmonicMean;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "input",
+        "lineNumber": 9,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "harmonic mean",
+        "lineNumber": 10,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "harmonicMean",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "harmonicMean"
+    ]
+  },
+  {
+    "description": "The [Interquartile range](http://en.wikipedia.org/wiki/Interquartile_range) is\na measure of statistical dispersion, or how scattered, spread, or\nconcentrated a distribution is. It's computed as the difference between\nthe third quartile and first quartile.",
+    "tags": [
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 6,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "sample"
+      },
+      {
+        "title": "returns",
+        "description": "interquartile range: the span between lower and upper quartile,\n0.25 and 0.75",
+        "lineNumber": 7,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "interquartileRange"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 5,
+        "column": 0
+      },
+      "end": {
+        "line": 14,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 15,
+          "column": 0
+        },
+        "end": {
+          "line": 22,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/interquartile_range.js",
+      "code": "'use strict';\n\nvar quantile = require('./quantile');\n\n/**\n * The [Interquartile range](http://en.wikipedia.org/wiki/Interquartile_range) is\n * a measure of statistical dispersion, or how scattered, spread, or\n * concentrated a distribution is. It's computed as the difference between\n * the third quartile and first quartile.\n *\n * @param {Array<number>} sample\n * @returns {number} interquartile range: the span between lower and upper quartile,\n * 0.25 and 0.75\n */\nfunction interquartileRange(sample) {\n    // We can't derive quantiles from an empty list\n    if (sample.length === 0) { return null; }\n\n    // Interquartile range is the span between the upper quartile,\n    // at `0.75`, and lower quartile, `0.25`\n    return quantile(sample, 0.75) - quantile(sample, 0.25);\n}\n\nmodule.exports = interquartileRange;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 6,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "sample"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "interquartile range: the span between lower and upper quartile,\n0.25 and 0.75",
+        "lineNumber": 7,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "interquartileRange",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "interquartileRange"
+    ]
+  },
+  {
+    "description": "The Inverse [Gaussian error function](http://en.wikipedia.org/wiki/Error_function)\nreturns a numerical approximation to the value that would have caused\n`errorFunction()` to return x.",
+    "tags": [
+      {
+        "title": "param",
+        "description": "value of error function",
+        "lineNumber": 5,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "x"
+      },
+      {
+        "title": "returns",
+        "description": "estimated inverted value",
+        "lineNumber": 6,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "inverseErrorFunction"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 3,
+        "column": 0
+      },
+      "end": {
+        "line": 10,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 11,
+          "column": 0
+        },
+        "end": {
+          "line": 24,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/inverse_error_function.js",
+      "code": "'use strict';\n\n/**\n * The Inverse [Gaussian error function](http://en.wikipedia.org/wiki/Error_function)\n * returns a numerical approximation to the value that would have caused\n * `errorFunction()` to return x.\n *\n * @param {number} x value of error function\n * @returns {number} estimated inverted value\n */\nfunction inverseErrorFunction(x) {\n    var a = (8 * (Math.PI - 3)) / (3 * Math.PI * (4 - Math.PI));\n\n    var inv = Math.sqrt(Math.sqrt(\n            Math.pow(2 / (Math.PI * a) + Math.log(1 - x * x) / 2, 2) -\n            Math.log(1 - x * x) / a) -\n            (2 / (Math.PI * a) + Math.log(1 - x * x) / 2));\n\n    if (x >= 0) {\n        return inv;\n    } else {\n        return -inv;\n    }\n}\n\nmodule.exports = inverseErrorFunction;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "value of error function",
+        "lineNumber": 5,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "x"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "estimated inverted value",
+        "lineNumber": 6,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "inverseErrorFunction",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "inverseErrorFunction"
+    ]
+  },
+  {
+    "description": "## [Jenks natural breaks optimization](http://en.wikipedia.org/wiki/Jenks_natural_breaks_optimization)",
+    "tags": [
+      {
+        "title": "param",
+        "description": "input data, as an array of number values",
+        "lineNumber": 3,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "data"
+      },
+      {
+        "title": "param",
+        "description": "number of desired classes",
+        "lineNumber": 4,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "nClasses"
+      },
+      {
+        "title": "returns",
+        "description": "array of class break positions",
+        "lineNumber": 5,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        }
+      },
+      {
+        "title": "name",
+        "name": "jenks"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 6,
+        "column": 0
+      },
+      "end": {
+        "line": 12,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 13,
+          "column": 0
+        },
+        "end": {
+          "line": 28,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/jenks.js",
+      "code": "'use strict';\n\nvar jenksBreaks = require('./jenks_breaks');\nvar jenksMatrices = require('./jenks_matrices');\n\n/**\n * ## [Jenks natural breaks optimization](http://en.wikipedia.org/wiki/Jenks_natural_breaks_optimization)\n *\n * @param {Array<number>} data input data, as an array of number values\n * @param {number} nClasses number of desired classes\n * @returns {Array<number>} array of class break positions\n */\nfunction jenks(data, nClasses) {\n\n    if (nClasses > data.length) { return null; }\n\n    // sort data in numerical order, since this is expected\n    // by the matrices function\n    data = data.slice().sort(function (a, b) { return a - b; });\n\n    // get our basic matrices\n    var matrices = jenksMatrices(data, nClasses),\n        // we only need lower class limits here\n        lowerClassLimits = matrices.lowerClassLimits;\n\n    // extract nClasses out of the computed matrices\n    return jenksBreaks(data, lowerClassLimits, nClasses);\n}\n\nmodule.exports = jenks;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "input data, as an array of number values",
+        "lineNumber": 3,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "data"
+      },
+      {
+        "title": "param",
+        "description": "number of desired classes",
+        "lineNumber": 4,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "nClasses"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "array of class break positions",
+        "lineNumber": 5,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        }
+      }
+    ],
+    "name": "jenks",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "jenks"
+    ]
+  },
+  {
+    "description": "[Linear Regression](http://en.wikipedia.org/wiki/Linear_regression)\n\n[Simple linear regression](http://en.wikipedia.org/wiki/Simple_linear_regression)\nis a simple way to find a fitted line\nbetween a set of coordinates.\n\nCalculate the slope and y-intercept of the regression line\nby calculating the least sum of squares",
+    "tags": [
+      {
+        "title": "param",
+        "description": "an array of two-element of arrays,\nlike `[[0, 1], [2, 3]]`",
+        "lineNumber": 10,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "TypeApplication",
+              "expression": {
+                "type": "NameExpression",
+                "name": "Array"
+              },
+              "applications": [
+                {
+                  "type": "NameExpression",
+                  "name": "number"
+                }
+              ]
+            }
+          ]
+        },
+        "name": "data"
+      },
+      {
+        "title": "returns",
+        "description": "object containing slope and intersect of regression line",
+        "lineNumber": 12,
+        "type": {
+          "type": "NameExpression",
+          "name": "Object"
+        }
+      },
+      {
+        "title": "name",
+        "name": "linearRegression"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 3,
+        "column": 0
+      },
+      "end": {
+        "line": 16,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 17,
+          "column": 0
+        },
+        "end": {
+          "line": 70,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/linear_regression.js",
+      "code": "'use strict';\n\n/**\n * [Linear Regression](http://en.wikipedia.org/wiki/Linear_regression)\n *\n * [Simple linear regression](http://en.wikipedia.org/wiki/Simple_linear_regression)\n * is a simple way to find a fitted line\n * between a set of coordinates.\n *\n * Calculate the slope and y-intercept of the regression line\n * by calculating the least sum of squares\n *\n * @param {Array<Array<number>>} data an array of two-element of arrays,\n * like `[[0, 1], [2, 3]]`\n * @returns {Object} object containing slope and intersect of regression line\n */\nfunction linearRegression(data) {\n\n    var m, b;\n\n    // Store data length in a local variable to reduce\n    // repeated object property lookups\n    var dataLength = data.length;\n\n    //if there's only one point, arbitrarily choose a slope of 0\n    //and a y-intercept of whatever the y of the initial point is\n    if (dataLength === 1) {\n        m = 0;\n        b = data[0][1];\n    } else {\n        // Initialize our sums and scope the `m` and `b`\n        // variables that define the line.\n        var sumX = 0, sumY = 0,\n            sumXX = 0, sumXY = 0;\n\n        // Use local variables to grab point values\n        // with minimal object property lookups\n        var point, x, y;\n\n        // Gather the sum of all x values, the sum of all\n        // y values, and the sum of x^2 and (x*y) for each\n        // value.\n        //\n        // In math notation, these would be SS_x, SS_y, SS_xx, and SS_xy\n        for (var i = 0; i < dataLength; i++) {\n            point = data[i];\n            x = point[0];\n            y = point[1];\n\n            sumX += x;\n            sumY += y;\n\n            sumXX += x * x;\n            sumXY += x * y;\n        }\n\n        // `m` is the slope of the regression line\n        m = ((dataLength * sumXY) - (sumX * sumY)) /\n            ((dataLength * sumXX) - (sumX * sumX));\n\n        // `b` is the y-intercept of the line.\n        b = (sumY / dataLength) - ((m * sumX) / dataLength);\n    }\n\n    // Return both values as an object.\n    return {\n        m: m,\n        b: b\n    };\n}\n\n\nmodule.exports = linearRegression;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "an array of two-element of arrays,\nlike `[[0, 1], [2, 3]]`",
+        "lineNumber": 10,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "TypeApplication",
+              "expression": {
+                "type": "NameExpression",
+                "name": "Array"
+              },
+              "applications": [
+                {
+                  "type": "NameExpression",
+                  "name": "number"
+                }
+              ]
+            }
+          ]
+        },
+        "name": "data"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "object containing slope and intersect of regression line",
+        "lineNumber": 12,
+        "type": {
+          "type": "NameExpression",
+          "name": "Object"
+        }
+      }
+    ],
+    "name": "linearRegression",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "linearRegression"
+    ]
+  },
+  {
+    "description": "## Fitting The Regression Line\n\nThis is called after `.data()` and returns the\nequation `y = f(x)` which gives the position\nof the regression line at each point in `x`.",
+    "tags": [
+      {
+        "title": "param",
+        "description": "object with `m` and `b` members, representing\nslope and intersect of desired line",
+        "lineNumber": 7,
+        "type": {
+          "type": "NameExpression",
+          "name": "Object"
+        },
+        "name": "mb"
+      },
+      {
+        "title": "returns",
+        "description": "method that computes y-value at any given\nx-value on the line.",
+        "lineNumber": 9,
+        "type": {
+          "type": "NameExpression",
+          "name": "Function"
+        }
+      },
+      {
+        "title": "name",
+        "name": "linearRegressionLine"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 3,
+        "column": 0
+      },
+      "end": {
+        "line": 14,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 15,
+          "column": 0
+        },
+        "end": {
+          "line": 26,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/linear_regression_line.js",
+      "code": "'use strict';\n\n/**\n * ## Fitting The Regression Line\n *\n * This is called after `.data()` and returns the\n * equation `y = f(x)` which gives the position\n * of the regression line at each point in `x`.\n *\n * @param {Object} mb object with `m` and `b` members, representing\n * slope and intersect of desired line\n * @returns {Function} method that computes y-value at any given\n * x-value on the line.\n */\nfunction linearRegressionLine(mb) {\n    // Get the slope, `m`, and y-intercept, `b`, of the line.\n    var m = mb.m,\n        b = mb.b;\n\n    // Return a function that computes a `y` value for each\n    // x value it is given, based on the values of `b` and `a`\n    // that we just computed.\n    return function(x) {\n        return b + (m * x);\n    };\n}\n\nmodule.exports = linearRegressionLine;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "object with `m` and `b` members, representing\nslope and intersect of desired line",
+        "lineNumber": 7,
+        "type": {
+          "type": "NameExpression",
+          "name": "Object"
+        },
+        "name": "mb"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "method that computes y-value at any given\nx-value on the line.",
+        "lineNumber": 9,
+        "type": {
+          "type": "NameExpression",
+          "name": "Function"
+        }
+      }
+    ],
+    "name": "linearRegressionLine",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "linearRegressionLine"
+    ]
+  },
+  {
+    "description": "The [Median Absolute Deviation](http://en.wikipedia.org/wiki/Median_absolute_deviation) is\na robust measure of statistical\ndispersion. It is more resilient to outliers than the standard deviation.",
+    "tags": [
+      {
+        "title": "param",
+        "description": "input array",
+        "lineNumber": 5,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      },
+      {
+        "title": "returns",
+        "description": "median absolute deviation",
+        "lineNumber": 6,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "mad"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 5,
+        "column": 0
+      },
+      "end": {
+        "line": 12,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 13,
+          "column": 0
+        },
+        "end": {
+          "line": 27,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/mad.js",
+      "code": "'use strict';\n\nvar median = require('./median');\n\n/**\n * The [Median Absolute Deviation](http://en.wikipedia.org/wiki/Median_absolute_deviation) is\n * a robust measure of statistical\n * dispersion. It is more resilient to outliers than the standard deviation.\n *\n * @param {Array<number>} x input array\n * @returns {number} median absolute deviation\n */\nfunction mad(x) {\n    // The mad of nothing is null\n    if (!x || x.length === 0) { return null; }\n\n    var medianValue = median(x),\n        medianAbsoluteDeviations = [];\n\n    // Make a list of absolute deviations from the median\n    for (var i = 0; i < x.length; i++) {\n        medianAbsoluteDeviations.push(Math.abs(x[i] - medianValue));\n    }\n\n    // Find the median value of that list\n    return median(medianAbsoluteDeviations);\n}\n\nmodule.exports = mad;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "input array",
+        "lineNumber": 5,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "median absolute deviation",
+        "lineNumber": 6,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "mad",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "mad"
+    ]
+  },
+  {
+    "description": "This computes the maximum number in an array.\n\nThis runs on `O(n)`, linear time in respect to the array",
+    "tags": [
+      {
+        "title": "param",
+        "description": "input",
+        "lineNumber": 5,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      },
+      {
+        "title": "returns",
+        "description": "maximum value",
+        "lineNumber": 6,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "example",
+        "description": "console.log(max([1, 2, 3, 4])); // 4",
+        "lineNumber": 7
+      },
+      {
+        "title": "name",
+        "name": "max"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 3,
+        "column": 0
+      },
+      "end": {
+        "line": 12,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 13,
+          "column": 0
+        },
+        "end": {
+          "line": 23,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/max.js",
+      "code": "'use strict';\n\n/**\n * This computes the maximum number in an array.\n *\n * This runs on `O(n)`, linear time in respect to the array\n *\n * @param {Array<number>} x input\n * @returns {number} maximum value\n * @example\n * console.log(max([1, 2, 3, 4])); // 4\n */\nfunction max(x) {\n    var value;\n    for (var i = 0; i < x.length; i++) {\n        // On the first iteration of this loop, max is\n        // undefined and is thus made the maximum element in the array\n        if (x[i] > value || value === undefined) {\n            value = x[i];\n        }\n    }\n    return value;\n}\n\nmodule.exports = max;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "input",
+        "lineNumber": 5,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "maximum value",
+        "lineNumber": 6,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "examples": [
+      "<span class=\"hljs-built_in\">console</span>.log(max([<span class=\"hljs-number\">1</span>, <span class=\"hljs-number\">2</span>, <span class=\"hljs-number\">3</span>, <span class=\"hljs-number\">4</span>])); <span class=\"hljs-comment\">// 4</span>"
+    ],
+    "name": "max",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "max"
+    ]
+  },
+  {
+    "description": "The mean, _also known as average_,\nis the sum over the number of values.\n\nThis runs on `O(n)`, linear time in respect to the array",
+    "tags": [
+      {
+        "title": "param",
+        "description": "input values",
+        "lineNumber": 6,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      },
+      {
+        "title": "returns",
+        "description": "mean",
+        "lineNumber": 7,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "example",
+        "description": "console.log(mean([0, 10])); // 5",
+        "lineNumber": 8
+      },
+      {
+        "title": "name",
+        "name": "mean"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 5,
+        "column": 0
+      },
+      "end": {
+        "line": 15,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 16,
+          "column": 0
+        },
+        "end": {
+          "line": 21,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/mean.js",
+      "code": "'use strict';\n\nvar sum = require('./sum');\n\n/**\n * The mean, _also known as average_,\n * is the sum over the number of values.\n *\n * This runs on `O(n)`, linear time in respect to the array\n *\n * @param {Array<number>} x input values\n * @returns {number} mean\n * @example\n * console.log(mean([0, 10])); // 5\n */\nfunction mean(x) {\n    // The mean of no numbers is null\n    if (x.length === 0) { return null; }\n\n    return sum(x) / x.length;\n}\n\nmodule.exports = mean;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "input values",
+        "lineNumber": 6,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "mean",
+        "lineNumber": 7,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "examples": [
+      "<span class=\"hljs-built_in\">console</span>.log(mean([<span class=\"hljs-number\">0</span>, <span class=\"hljs-number\">10</span>])); <span class=\"hljs-comment\">// 5</span>"
+    ],
+    "name": "mean",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "mean"
+    ]
+  },
+  {
+    "description": "The [median](http://en.wikipedia.org/wiki/Median) is\nthe middle number of a list. This is often a good indicator of 'the middle'\nwhen there are outliers that skew the `mean()` value.",
+    "tags": [
+      {
+        "title": "param",
+        "description": "input",
+        "lineNumber": 5,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      },
+      {
+        "title": "returns",
+        "description": "median value",
+        "lineNumber": 6,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "median"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 3,
+        "column": 0
+      },
+      "end": {
+        "line": 10,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 11,
+          "column": 0
+        },
+        "end": {
+          "line": 29,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/median.js",
+      "code": "'use strict';\n\n/**\n * The [median](http://en.wikipedia.org/wiki/Median) is\n * the middle number of a list. This is often a good indicator of 'the middle'\n * when there are outliers that skew the `mean()` value.\n *\n * @param {Array<number>} x input\n * @returns {number} median value\n */\nfunction median(x) {\n    // The median of an empty list is null\n    if (x.length === 0) { return null; }\n\n    // Sorting the array makes it easy to find the center, but\n    // use `.slice()` to ensure the original array `x` is not modified\n    var sorted = x.slice().sort(function (i, j) { return i - j; });\n\n    // If the length of the list is odd, it's the central number\n    if (sorted.length % 2 === 1) {\n        return sorted[(sorted.length - 1) / 2];\n    // Otherwise, the median is the average of the two numbers\n    // at the center of the list\n    } else {\n        var a = sorted[(sorted.length / 2) - 1];\n        var b = sorted[(sorted.length / 2)];\n        return (a + b) / 2;\n    }\n}\n\nmodule.exports = median;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "input",
+        "lineNumber": 5,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "median value",
+        "lineNumber": 6,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "median",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "median"
+    ]
+  },
+  {
+    "description": "The min is the lowest number in the array.\n\nThis runs on `O(n)`, linear time in respect to the array",
+    "tags": [
+      {
+        "title": "param",
+        "description": "input",
+        "lineNumber": 5,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      },
+      {
+        "title": "returns",
+        "description": "minimum value",
+        "lineNumber": 6,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "min"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 3,
+        "column": 0
+      },
+      "end": {
+        "line": 10,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 11,
+          "column": 0
+        },
+        "end": {
+          "line": 21,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/min.js",
+      "code": "'use strict';\n\n/**\n * The min is the lowest number in the array.\n *\n * This runs on `O(n)`, linear time in respect to the array\n *\n * @param {Array<number>} x input\n * @returns {number} minimum value\n */\nfunction min(x) {\n    var value;\n    for (var i = 0; i < x.length; i++) {\n        // On the first iteration of this loop, min is\n        // undefined and is thus made the minimum element in the array\n        if (x[i] < value || value === undefined) {\n            value = x[i];\n        }\n    }\n    return value;\n}\n\nmodule.exports = min;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "input",
+        "lineNumber": 5,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "minimum value",
+        "lineNumber": 6,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "min",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "min"
+    ]
+  },
+  {
+    "description": "# Mixin\n\nMixin simple_statistics to a single Array instance if provided\nor the Array native object if not. This is an optional\nfeature that lets you treat simple_statistics as a native feature\nof Javascript.",
+    "tags": [
+      {
+        "title": "name",
+        "name": "mixin"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 3,
+        "column": 0
+      },
+      "end": {
+        "line": 10,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 11,
+          "column": 0
+        },
+        "end": {
+          "line": 66,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/mixin.js",
+      "code": "'use strict';\n\n/**\n * # Mixin\n *\n * Mixin simple_statistics to a single Array instance if provided\n * or the Array native object if not. This is an optional\n * feature that lets you treat simple_statistics as a native feature\n * of Javascript.\n */\nfunction mixin(ss, array) {\n    var support = !!(Object.defineProperty && Object.defineProperties);\n    // Coverage testing will never test this error.\n    /* istanbul ignore next */\n    if (!support) {\n        throw new Error('without defineProperty, simple-statistics cannot be mixed in');\n    }\n\n    // only methods which work on basic arrays in a single step\n    // are supported\n    var arrayMethods = ['median', 'standardDeviation', 'sum',\n        'sampleSkewness',\n        'mean', 'min', 'max', 'quantile', 'geometricMean',\n        'harmonicMean', 'root_mean_square'];\n\n    // create a closure with a method name so that a reference\n    // like `arrayMethods[i]` doesn't follow the loop increment\n    function wrap(method) {\n        return function() {\n            // cast any arguments into an array, since they're\n            // natively objects\n            var args = Array.prototype.slice.apply(arguments);\n            // make the first argument the array itself\n            args.unshift(this);\n            // return the result of the ss method\n            return ss[method].apply(ss, args);\n        };\n    }\n\n    // select object to extend\n    var extending;\n    if (array) {\n        // create a shallow copy of the array so that our internal\n        // operations do not change it by reference\n        extending = array.slice();\n    } else {\n        extending = Array.prototype;\n    }\n\n    // for each array function, define a function that gets\n    // the array as the first argument.\n    // We use [defineProperty](https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Object/defineProperty)\n    // because it allows these properties to be non-enumerable:\n    // `for (var in x)` loops will not run into problems with this\n    // implementation.\n    for (var i = 0; i < arrayMethods.length; i++) {\n        Object.defineProperty(extending, arrayMethods[i], {\n            value: wrap(arrayMethods[i]),\n            configurable: true,\n            enumerable: false,\n            writable: true\n        });\n    }\n\n    return extending;\n}\n\nmodule.exports = mixin;"
+    },
+    "name": "mixin",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "mixin"
+    ]
+  },
+  {
+    "description": "The [mode](http://bit.ly/W5K4Yt) is the number that appears in a list the highest number of times.\nThere can be multiple modes in a list: in the event of a tie, this\nalgorithm will return the most recently seen mode.\n\nThis implementation is inspired by [science.js](https://github.com/jasondavies/science.js/blob/master/src/stats/mode.js)\n\nThis runs on `O(n)`, linear time in respect to the array",
+    "tags": [
+      {
+        "title": "param",
+        "description": "input",
+        "lineNumber": 9,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      },
+      {
+        "title": "returns",
+        "description": "mode",
+        "lineNumber": 10,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "mode"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 3,
+        "column": 0
+      },
+      "end": {
+        "line": 14,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 15,
+          "column": 0
+        },
+        "end": {
+          "line": 59,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/mode.js",
+      "code": "'use strict';\n\n/**\n * The [mode](http://bit.ly/W5K4Yt) is the number that appears in a list the highest number of times.\n * There can be multiple modes in a list: in the event of a tie, this\n * algorithm will return the most recently seen mode.\n *\n * This implementation is inspired by [science.js](https://github.com/jasondavies/science.js/blob/master/src/stats/mode.js)\n *\n * This runs on `O(n)`, linear time in respect to the array\n *\n * @param {Array<number>} x input\n * @returns {number} mode\n */\nfunction mode(x) {\n\n    // Handle edge cases:\n    // The median of an empty list is null\n    if (x.length === 0) { return null; }\n    else if (x.length === 1) { return x[0]; }\n\n    // Sorting the array lets us iterate through it below and be sure\n    // that every time we see a new number it's new and we'll never\n    // see the same number twice\n    var sorted = x.slice().sort(function (a, b) { return a - b; });\n\n    // This assumes it is dealing with an array of size > 1, since size\n    // 0 and 1 are handled immediately. Hence it starts at index 1 in the\n    // array.\n    var last = sorted[0],\n        // store the mode as we find new modes\n        value,\n        // store how many times we've seen the mode\n        maxSeen = 0,\n        // how many times the current candidate for the mode\n        // has been seen\n        seenThis = 1;\n\n    // end at sorted.length + 1 to fix the case in which the mode is\n    // the highest number that occurs in the sequence. the last iteration\n    // compares sorted[i], which is undefined, to the highest number\n    // in the series\n    for (var i = 1; i < sorted.length + 1; i++) {\n        // we're seeing a new number pass by\n        if (sorted[i] !== last) {\n            // the last number is the new mode since we saw it more\n            // often than the old one\n            if (seenThis > maxSeen) {\n                maxSeen = seenThis;\n                value = last;\n            }\n            seenThis = 1;\n            last = sorted[i];\n        // if this isn't a new number, it's one more occurrence of\n        // the potential mode\n        } else { seenThis++; }\n    }\n    return value;\n}\n\nmodule.exports = mode;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "input",
+        "lineNumber": 9,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "mode",
+        "lineNumber": 10,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "mode",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "mode"
+    ]
+  },
+  {
+    "description": "The [Poisson Distribution](http://en.wikipedia.org/wiki/Poisson_distribution)\nis a discrete probability distribution that expresses the probability\nof a given number of events occurring in a fixed interval of time\nand/or space if these events occur with a known average rate and\nindependently of the time since the last event.\n\nThe Poisson Distribution is characterized by the strictly positive\nmean arrival or occurrence rate, `λ`.",
+    "tags": [
+      {
+        "title": "param",
+        "description": "location poisson distribution",
+        "lineNumber": 10,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "position"
+      },
+      {
+        "title": "returns",
+        "description": "value of poisson distribution at that point",
+        "lineNumber": 11,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "poissonDistribution"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 6,
+        "column": 0
+      },
+      "end": {
+        "line": 18,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 19,
+          "column": 0
+        },
+        "end": {
+          "line": 44,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/poisson_distribution.js",
+      "code": "'use strict';\n\nvar epsilon = require('./epsilon');\nvar factorial = require('./factorial');\n\n/**\n * The [Poisson Distribution](http://en.wikipedia.org/wiki/Poisson_distribution)\n * is a discrete probability distribution that expresses the probability\n * of a given number of events occurring in a fixed interval of time\n * and/or space if these events occur with a known average rate and\n * independently of the time since the last event.\n *\n * The Poisson Distribution is characterized by the strictly positive\n * mean arrival or occurrence rate, `λ`.\n *\n * @param {number} position location poisson distribution\n * @returns {number} value of poisson distribution at that point\n */\nfunction poissonDistribution(lambda) {\n    // Check that lambda is strictly positive\n    if (lambda <= 0) { return null; }\n\n    // our current place in the distribution\n    var x = 0,\n        // and we keep track of the current cumulative probability, in\n        // order to know when to stop calculating chances.\n        cumulativeProbability = 0,\n        // the calculated cells to be returned\n        cells = {};\n\n    // This algorithm iterates through each potential outcome,\n    // until the `cumulativeProbability` is very close to 1, at\n    // which point we've defined the vast majority of outcomes\n    do {\n        // a [probability mass function](https://en.wikipedia.org/wiki/Probability_mass_function)\n        cells[x] = (Math.pow(Math.E, -lambda) * Math.pow(lambda, x)) / factorial(x);\n        cumulativeProbability += cells[x];\n        x++;\n    // when the cumulativeProbability is nearly 1, we've calculated\n    // the useful range of this distribution\n    } while (cumulativeProbability < 1 - epsilon);\n\n    return cells;\n}\n\nmodule.exports = poissonDistribution;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "location poisson distribution",
+        "lineNumber": 10,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "position"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "value of poisson distribution at that point",
+        "lineNumber": 11,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "poissonDistribution",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "poissonDistribution"
+    ]
+  },
+  {
+    "description": "The [Probit](http://en.wikipedia.org/wiki/Probit)\nis the inverse of cumulativeStdNormalProbability(),\nand is also known as the normal quantile function.\n\nIt returns the number of standard deviations from the mean\nwhere the p'th quantile of values can be found in a normal distribution.\nSo, for example, probit(0.5 + 0.6827/2) ≈ 1 because 68.27% of values are\nnormally found within 1 standard deviation above or below the mean.",
+    "tags": [
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 10,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "p"
+      },
+      {
+        "title": "returns",
+        "description": "probit",
+        "lineNumber": 11,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "probit"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 6,
+        "column": 0
+      },
+      "end": {
+        "line": 18,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 19,
+          "column": 0
+        },
+        "end": {
+          "line": 26,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/probit.js",
+      "code": "'use strict';\n\nvar epsilon = require('./epsilon');\nvar inverseErrorFunction = require('./inverse_error_function');\n\n/**\n * The [Probit](http://en.wikipedia.org/wiki/Probit)\n * is the inverse of cumulativeStdNormalProbability(),\n * and is also known as the normal quantile function.\n *\n * It returns the number of standard deviations from the mean\n * where the p'th quantile of values can be found in a normal distribution.\n * So, for example, probit(0.5 + 0.6827/2) ≈ 1 because 68.27% of values are\n * normally found within 1 standard deviation above or below the mean.\n *\n * @param {number} p\n * @returns {number} probit\n */\nfunction probit(p) {\n    if (p === 0) {\n        p = epsilon;\n    } else if (p >= 1) {\n        p = 1 - epsilon;\n    }\n    return Math.sqrt(2) * inverseErrorFunction(2 * p - 1);\n}\n\nmodule.exports = probit;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 10,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "p"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "probit",
+        "lineNumber": 11,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "probit",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "probit"
+    ]
+  },
+  {
+    "description": "The [quantile](https://en.wikipedia.org/wiki/Quantile):\nthis is a population quantile, since we assume to know the entire\ndataset in this library. Thus I'm trying to follow the\n[Quantiles of a Population](http://en.wikipedia.org/wiki/Quantile#Quantiles_of_a_population)\nalgorithm from wikipedia.\n\nSample is a one-dimensional array of numbers,\nand p is either a decimal number from 0 to 1 or an array of decimal\nnumbers from 0 to 1.\nIn terms of a k/q quantile, p = k/q - it's just dealing with fractions or dealing\nwith decimal values.\nWhen p is an array, the result of the function is also an array containing the appropriate\nquantiles in input order",
+    "tags": [
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 15,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "sample"
+      },
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 16,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "p"
+      },
+      {
+        "title": "returns",
+        "description": "quantile",
+        "lineNumber": 17,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "quantile"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 5,
+        "column": 0
+      },
+      "end": {
+        "line": 23,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 24,
+          "column": 0
+        },
+        "end": {
+          "line": 44,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/quantile.js",
+      "code": "'use strict';\n\nvar quantileSorted = require('./quantile_sorted');\n\n/**\n * The [quantile](https://en.wikipedia.org/wiki/Quantile):\n * this is a population quantile, since we assume to know the entire\n * dataset in this library. Thus I'm trying to follow the\n * [Quantiles of a Population](http://en.wikipedia.org/wiki/Quantile#Quantiles_of_a_population)\n * algorithm from wikipedia.\n *\n * Sample is a one-dimensional array of numbers,\n * and p is either a decimal number from 0 to 1 or an array of decimal\n * numbers from 0 to 1.\n * In terms of a k/q quantile, p = k/q - it's just dealing with fractions or dealing\n * with decimal values.\n * When p is an array, the result of the function is also an array containing the appropriate\n * quantiles in input order\n *\n * @param {Array<number>} sample\n * @param {number} p\n * @returns {number} quantile\n */\nfunction quantile(sample, p) {\n\n    // We can't derive quantiles from an empty list\n    if (sample.length === 0) { return null; }\n\n    // Sort a copy of the array. We'll need a sorted array to index\n    // the values in sorted order.\n    var sorted = sample.slice().sort(function (a, b) { return a - b; });\n\n    if (p.length) {\n        // Initialize the result array\n        var results = [];\n        // For each requested quantile\n        for (var i = 0; i < p.length; i++) {\n            results[i] = quantileSorted(sorted, p[i]);\n        }\n        return results;\n    } else {\n        return quantileSorted(sorted, p);\n    }\n}\n\nmodule.exports = quantile;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 15,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "sample"
+      },
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 16,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "p"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "quantile",
+        "lineNumber": 17,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "quantile",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "quantile"
+    ]
+  },
+  {
+    "description": "This is the internal implementation of quantiles: when you know\nthat the order is sorted, you don't need to re-sort it, and the computations\nare much faster.",
+    "tags": [
+      {
+        "title": "param",
+        "description": "input data",
+        "lineNumber": 5,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "sample"
+      },
+      {
+        "title": "param",
+        "description": "desired quantile: a number between 0 to 1, inclusive",
+        "lineNumber": 6,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "p"
+      },
+      {
+        "title": "returns",
+        "description": "quantile value",
+        "lineNumber": 7,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "quantileSorted"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 3,
+        "column": 0
+      },
+      "end": {
+        "line": 11,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 12,
+          "column": 0
+        },
+        "end": {
+          "line": 34,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/quantile_sorted.js",
+      "code": "'use strict';\n\n/**\n * This is the internal implementation of quantiles: when you know\n * that the order is sorted, you don't need to re-sort it, and the computations\n * are much faster.\n *\n * @param {Array<number>} sample input data\n * @param {number} p desired quantile: a number between 0 to 1, inclusive\n * @returns {number} quantile value\n */\nfunction quantileSorted(sample, p) {\n    var idx = (sample.length) * p;\n    if (p < 0 || p > 1) {\n        return null;\n    } else if (p === 1) {\n        // If p is 1, directly return the last element\n        return sample[sample.length - 1];\n    } else if (p === 0) {\n        // If p is 0, directly return the first element\n        return sample[0];\n    } else if (idx % 1 !== 0) {\n        // If p is not integer, return the next element in array\n        return sample[Math.ceil(idx) - 1];\n    } else if (sample.length % 2 === 0) {\n        // If the list has even-length, we'll take the average of this number\n        // and the next value, if there is one\n        return (sample[idx - 1] + sample[idx]) / 2;\n    } else {\n        // Finally, in the simple case of an integer value\n        // with an odd-length list, return the sample value at the index.\n        return sample[idx];\n    }\n}\n\nmodule.exports = quantileSorted;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "input data",
+        "lineNumber": 5,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "sample"
+      },
+      {
+        "title": "param",
+        "description": "desired quantile: a number between 0 to 1, inclusive",
+        "lineNumber": 6,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "p"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "quantile value",
+        "lineNumber": 7,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "quantileSorted",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "quantileSorted"
+    ]
+  },
+  {
+    "description": "The [R Squared](http://en.wikipedia.org/wiki/Coefficient_of_determination)\nvalue of data compared with a function `f`\nis the sum of the squared differences between the prediction\nand the actual value.",
+    "tags": [
+      {
+        "title": "param",
+        "description": "input data: this should be doubly-nested",
+        "lineNumber": 6,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "TypeApplication",
+              "expression": {
+                "type": "NameExpression",
+                "name": "Array"
+              },
+              "applications": [
+                {
+                  "type": "NameExpression",
+                  "name": "number"
+                }
+              ]
+            }
+          ]
+        },
+        "name": "data"
+      },
+      {
+        "title": "param",
+        "description": "function called on `[i][0]` values within the dataset",
+        "lineNumber": 7,
+        "type": {
+          "type": "NameExpression",
+          "name": "Function"
+        },
+        "name": "f"
+      },
+      {
+        "title": "returns",
+        "description": "r-squared value",
+        "lineNumber": 8,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "rSquared"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 3,
+        "column": 0
+      },
+      "end": {
+        "line": 12,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 13,
+          "column": 0
+        },
+        "end": {
+          "line": 45,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/r_squared.js",
+      "code": "'use strict';\n\n/**\n * The [R Squared](http://en.wikipedia.org/wiki/Coefficient_of_determination)\n * value of data compared with a function `f`\n * is the sum of the squared differences between the prediction\n * and the actual value.\n *\n * @param {Array<Array<number>>} data input data: this should be doubly-nested\n * @param {Function} f function called on `[i][0]` values within the dataset\n * @returns {number} r-squared value\n */\nfunction rSquared(data, f) {\n    if (data.length < 2) { return 1; }\n\n    // Compute the average y value for the actual\n    // data set in order to compute the\n    // _total sum of squares_\n    var sum = 0, average;\n    for (var i = 0; i < data.length; i++) {\n        sum += data[i][1];\n    }\n    average = sum / data.length;\n\n    // Compute the total sum of squares - the\n    // squared difference between each point\n    // and the average of all points.\n    var sumOfSquares = 0;\n    for (var j = 0; j < data.length; j++) {\n        sumOfSquares += Math.pow(average - data[j][1], 2);\n    }\n\n    // Finally estimate the error: the squared\n    // difference between the estimate and the actual data\n    // value at each point.\n    var err = 0;\n    for (var k = 0; k < data.length; k++) {\n        err += Math.pow(data[k][1] - f(data[k][0]), 2);\n    }\n\n    // As the error grows larger, its ratio to the\n    // sum of squares increases and the r squared\n    // value grows lower.\n    return 1 - (err / sumOfSquares);\n}\n\nmodule.exports = rSquared;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "input data: this should be doubly-nested",
+        "lineNumber": 6,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "TypeApplication",
+              "expression": {
+                "type": "NameExpression",
+                "name": "Array"
+              },
+              "applications": [
+                {
+                  "type": "NameExpression",
+                  "name": "number"
+                }
+              ]
+            }
+          ]
+        },
+        "name": "data"
+      },
+      {
+        "title": "param",
+        "description": "function called on `[i][0]` values within the dataset",
+        "lineNumber": 7,
+        "type": {
+          "type": "NameExpression",
+          "name": "Function"
+        },
+        "name": "f"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "r-squared value",
+        "lineNumber": 8,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "rSquared",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "rSquared"
+    ]
+  },
+  {
+    "description": "Root Mean Square (RMS)\n\nA mean function used as a measure of the magnitude of a set\nof numbers, regardless of their sign.\n\nThis is the square root of the mean of the squares of the\ninput numbers.\n\nThis runs on `O(n)`, linear time in respect to the array",
+    "tags": [
+      {
+        "title": "param",
+        "description": "input",
+        "lineNumber": 11,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      },
+      {
+        "title": "returns",
+        "description": "root mean square",
+        "lineNumber": 12,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "rootMeanSquare"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 3,
+        "column": 0
+      },
+      "end": {
+        "line": 16,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 17,
+          "column": 0
+        },
+        "end": {
+          "line": 26,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/root_mean_square.js",
+      "code": "'use strict';\n\n/**\n * Root Mean Square (RMS)\n *\n * A mean function used as a measure of the magnitude of a set\n * of numbers, regardless of their sign.\n *\n * This is the square root of the mean of the squares of the\n * input numbers.\n *\n * This runs on `O(n)`, linear time in respect to the array\n *\n * @param {Array<number>} x input\n * @returns {number} root mean square\n */\nfunction rootMeanSquare(x) {\n    if (x.length === 0) { return null; }\n\n    var sumOfSquares = 0;\n    for (var i = 0; i < x.length; i++) {\n        sumOfSquares += Math.pow(x[i], 2);\n    }\n\n    return Math.sqrt(sumOfSquares / x.length);\n}\n\nmodule.exports = rootMeanSquare;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "input",
+        "lineNumber": 11,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "root mean square",
+        "lineNumber": 12,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "rootMeanSquare",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "rootMeanSquare"
+    ]
+  },
+  {
+    "description": "Create a [simple random sample](http://en.wikipedia.org/wiki/Simple_random_sample)\nfrom a given array of `n` elements.",
+    "tags": [
+      {
+        "title": "param",
+        "description": "input array. can contain any type",
+        "lineNumber": 4,
+        "type": {
+          "type": "NameExpression",
+          "name": "Array"
+        },
+        "name": "array"
+      },
+      {
+        "title": "param",
+        "description": "count of how many elements to take",
+        "lineNumber": 5,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "n"
+      },
+      {
+        "title": "param",
+        "description": "an optional source of entropy\ninstead of Math.random",
+        "lineNumber": 6,
+        "type": {
+          "type": "OptionalType",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Function"
+          }
+        },
+        "name": "randomSource",
+        "default": "Math.random"
+      },
+      {
+        "title": "returns",
+        "description": "subset of n elements in original array",
+        "lineNumber": 8,
+        "type": {
+          "type": "NameExpression",
+          "name": "Array"
+        }
+      },
+      {
+        "title": "name",
+        "name": "sample"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 5,
+        "column": 0
+      },
+      "end": {
+        "line": 14,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 15,
+          "column": 0
+        },
+        "end": {
+          "line": 21,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/sample.js",
+      "code": "'use strict';\n\nvar shuffle = require('./shuffle');\n\n/**\n * Create a [simple random sample](http://en.wikipedia.org/wiki/Simple_random_sample)\n * from a given array of `n` elements.\n *\n * @param {Array} array input array. can contain any type\n * @param {number} n count of how many elements to take\n * @param {Function} [randomSource=Math.random] an optional source of entropy\n * instead of Math.random\n * @return {Array} subset of n elements in original array\n */\nfunction sample(array, n, randomSource) {\n    // shuffle the original array using a fisher-yates shuffle\n    var shuffled = shuffle(array, randomSource);\n\n    // and then return a subset of it - the first `n` elements.\n    return shuffled.slice(0, n);\n}\n\nmodule.exports = sample;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "input array. can contain any type",
+        "lineNumber": 4,
+        "type": {
+          "type": "NameExpression",
+          "name": "Array"
+        },
+        "name": "array"
+      },
+      {
+        "title": "param",
+        "description": "count of how many elements to take",
+        "lineNumber": 5,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "n"
+      },
+      {
+        "title": "param",
+        "description": "an optional source of entropy\ninstead of Math.random",
+        "lineNumber": 6,
+        "type": {
+          "type": "OptionalType",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Function"
+          }
+        },
+        "name": "randomSource",
+        "default": "Math.random"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "subset of n elements in original array",
+        "lineNumber": 8,
+        "type": {
+          "type": "NameExpression",
+          "name": "Array"
+        }
+      }
+    ],
+    "name": "sample",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "sample"
+    ]
+  },
+  {
+    "description": "The [correlation](http://en.wikipedia.org/wiki/Correlation_and_dependence) is\na measure of how correlated two datasets are, between -1 and 1",
+    "tags": [
+      {
+        "title": "param",
+        "description": "first input",
+        "lineNumber": 4,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      },
+      {
+        "title": "param",
+        "description": "second input",
+        "lineNumber": 5,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "y"
+      },
+      {
+        "title": "returns",
+        "description": "sample correlation",
+        "lineNumber": 6,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "sampleCorrelation"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 6,
+        "column": 0
+      },
+      "end": {
+        "line": 13,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 14,
+          "column": 0
+        },
+        "end": {
+          "line": 24,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/sample_correlation.js",
+      "code": "'use strict';\n\nvar sampleCovariance = require('./sample_covariance');\nvar sampleStandardDeviation = require('./sample_standard_deviation');\n\n/**\n * The [correlation](http://en.wikipedia.org/wiki/Correlation_and_dependence) is\n * a measure of how correlated two datasets are, between -1 and 1\n *\n * @param {Array<number>} x first input\n * @param {Array<number>} y second input\n * @returns {number} sample correlation\n */\nfunction sampleCorrelation(x, y) {\n    var cov = sampleCovariance(x, y),\n        xstd = sampleStandardDeviation(x),\n        ystd = sampleStandardDeviation(y);\n\n    if (cov === null || xstd === null || ystd === null) {\n        return null;\n    }\n\n    return cov / xstd / ystd;\n}\n\nmodule.exports = sampleCorrelation;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "first input",
+        "lineNumber": 4,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      },
+      {
+        "title": "param",
+        "description": "second input",
+        "lineNumber": 5,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "y"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "sample correlation",
+        "lineNumber": 6,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "sampleCorrelation",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "sampleCorrelation"
+    ]
+  },
+  {
+    "description": "[sample covariance](https://en.wikipedia.org/wiki/Sample_mean_and_sampleCovariance) of two datasets:\nhow much do the two datasets move together?\nx and y are two datasets, represented as arrays of numbers.",
+    "tags": [
+      {
+        "title": "param",
+        "description": "first input",
+        "lineNumber": 5,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      },
+      {
+        "title": "param",
+        "description": "second input",
+        "lineNumber": 6,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "y"
+      },
+      {
+        "title": "returns",
+        "description": "sample covariance",
+        "lineNumber": 7,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "sampleCovariance"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 5,
+        "column": 0
+      },
+      "end": {
+        "line": 13,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 14,
+          "column": 0
+        },
+        "end": {
+          "line": 39,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/sample_covariance.js",
+      "code": "'use strict';\n\nvar mean = require('./mean');\n\n/**\n * [sample covariance](https://en.wikipedia.org/wiki/Sample_mean_and_sampleCovariance) of two datasets:\n * how much do the two datasets move together?\n * x and y are two datasets, represented as arrays of numbers.\n *\n * @param {Array<number>} x first input\n * @param {Array<number>} y second input\n * @returns {number} sample covariance\n */\nfunction sampleCovariance(x, y) {\n\n    // The two datasets must have the same length which must be more than 1\n    if (x.length <= 1 || x.length !== y.length) {\n        return null;\n    }\n\n    // determine the mean of each dataset so that we can judge each\n    // value of the dataset fairly as the difference from the mean. this\n    // way, if one dataset is [1, 2, 3] and [2, 3, 4], their covariance\n    // does not suffer because of the difference in absolute values\n    var xmean = mean(x),\n        ymean = mean(y),\n        sum = 0;\n\n    // for each pair of values, the covariance increases when their\n    // difference from the mean is associated - if both are well above\n    // or if both are well below\n    // the mean, the covariance increases significantly.\n    for (var i = 0; i < x.length; i++) {\n        sum += (x[i] - xmean) * (y[i] - ymean);\n    }\n\n    // the covariance is weighted by the length of the datasets.\n    return sum / (x.length - 1);\n}\n\nmodule.exports = sampleCovariance;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "first input",
+        "lineNumber": 5,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      },
+      {
+        "title": "param",
+        "description": "second input",
+        "lineNumber": 6,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "y"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "sample covariance",
+        "lineNumber": 7,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "sampleCovariance",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "sampleCovariance"
+    ]
+  },
+  {
+    "description": "[Skewness](http://en.wikipedia.org/wiki/Skewness) is\na measure of the extent to which a probability distribution of a\nreal-valued random variable \"leans\" to one side of the mean.\nThe skewness value can be positive or negative, or even undefined.\n\nImplementation is based on the adjusted Fisher-Pearson standardized\nmoment coefficient, which is the version found in Excel and several\nstatistical packages including Minitab, SAS and SPSS.\n\nDepends on `sumNthPowerDeviations()` and `sampleStandardDeviation`",
+    "tags": [
+      {
+        "title": "param",
+        "description": "input",
+        "lineNumber": 12,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      },
+      {
+        "title": "returns",
+        "description": "sample skewness",
+        "lineNumber": 13,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "sampleSkewness"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 6,
+        "column": 0
+      },
+      "end": {
+        "line": 20,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 21,
+          "column": 0
+        },
+        "end": {
+          "line": 30,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/sample_skewness.js",
+      "code": "'use strict';\n\nvar sumNthPowerDeviations = require('./sum_nth_power_deviations');\nvar sampleStandardDeviation = require('./sample_standard_deviation');\n\n/**\n * [Skewness](http://en.wikipedia.org/wiki/Skewness) is\n * a measure of the extent to which a probability distribution of a\n * real-valued random variable \"leans\" to one side of the mean.\n * The skewness value can be positive or negative, or even undefined.\n *\n * Implementation is based on the adjusted Fisher-Pearson standardized\n * moment coefficient, which is the version found in Excel and several\n * statistical packages including Minitab, SAS and SPSS.\n *\n * Depends on `sumNthPowerDeviations()` and `sampleStandardDeviation`\n *\n * @param {Array<number>} x input\n * @returns {number} sample skewness\n */\nfunction sampleSkewness(x) {\n    // The skewness of less than three arguments is null\n    if (x.length < 3) { return null; }\n\n    var n = x.length,\n        cubedS = Math.pow(sampleStandardDeviation(x), 3),\n        sumCubedDeviations = sumNthPowerDeviations(x, 3);\n\n    return n * sumCubedDeviations / ((n - 1) * (n - 2) * cubedS);\n}\n\nmodule.exports = sampleSkewness;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "input",
+        "lineNumber": 12,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "sample skewness",
+        "lineNumber": 13,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "sampleSkewness",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "sampleSkewness"
+    ]
+  },
+  {
+    "description": "The [standard deviation](http://en.wikipedia.org/wiki/Standard_deviation)\nis the square root of the variance.\n\ndepends on `sampleVariance()`",
+    "tags": [
+      {
+        "title": "param",
+        "description": "input array",
+        "lineNumber": 6,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      },
+      {
+        "title": "returns",
+        "description": "sample standard deviation",
+        "lineNumber": 7,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "sampleStandardDeviation"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 5,
+        "column": 0
+      },
+      "end": {
+        "line": 13,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 14,
+          "column": 0
+        },
+        "end": {
+          "line": 19,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/sample_standard_deviation.js",
+      "code": "'use strict';\n\nvar sampleVariance = require('./sample_variance');\n\n/**\n * The [standard deviation](http://en.wikipedia.org/wiki/Standard_deviation)\n * is the square root of the variance.\n *\n * depends on `sampleVariance()`\n *\n * @param {Array<number>} x input array\n * @returns {number} sample standard deviation\n */\nfunction sampleStandardDeviation(x) {\n    // The standard deviation of no numbers is null\n    if (x.length <= 1) { return null; }\n\n    return Math.sqrt(sampleVariance(x));\n}\n\nmodule.exports = sampleStandardDeviation;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "input array",
+        "lineNumber": 6,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "sample standard deviation",
+        "lineNumber": 7,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "sampleStandardDeviation",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "sampleStandardDeviation"
+    ]
+  },
+  {
+    "description": "The [standard deviation](http://en.wikipedia.org/wiki/Standard_deviation)\nis the square root of the variance.",
+    "tags": [
+      {
+        "title": "param",
+        "description": "input",
+        "lineNumber": 4,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      },
+      {
+        "title": "returns",
+        "description": "standard deviation",
+        "lineNumber": 5,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "standardDeviation"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 5,
+        "column": 0
+      },
+      "end": {
+        "line": 11,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 12,
+          "column": 0
+        },
+        "end": {
+          "line": 17,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/standard_deviation.js",
+      "code": "'use strict';\n\nvar variance = require('./variance');\n\n/**\n * The [standard deviation](http://en.wikipedia.org/wiki/Standard_deviation)\n * is the square root of the variance.\n *\n * @param {Array<number>} x input\n * @returns {number} standard deviation\n */\nfunction standardDeviation(x) {\n    // The standard deviation of no numbers is null\n    if (x.length === 0) { return null; }\n\n    return Math.sqrt(variance(x));\n}\n\nmodule.exports = standardDeviation;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "input",
+        "lineNumber": 4,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "standard deviation",
+        "lineNumber": 5,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "standardDeviation",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "standardDeviation"
+    ]
+  },
+  {
+    "description": "A standard normal table, also called the unit normal table or Z table,\nis a mathematical table for the values of Φ (phi), which are the values of\nthe cumulative distribution function of the normal distribution.\nIt is used to find the probability that a statistic is observed below,\nabove, or between values on the standard normal distribution, and by\nextension, any normal distribution.\n\nThe probabilities are taken from http://en.wikipedia.org/wiki/Standard_normal_table\nThe table used is the cumulative, and not cumulative from 0 to mean\n(even though the latter has 5 digits precision, instead of 4).",
+    "tags": [
+      {
+        "title": "name",
+        "name": "standardNormalTable"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 3,
+        "column": 0
+      },
+      "end": {
+        "line": 14,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 15,
+          "column": 0
+        },
+        "end": {
+          "line": 79,
+          "column": 2
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/standard_normal_table.js",
+      "code": "'use strict';\n\n/**\n * A standard normal table, also called the unit normal table or Z table,\n * is a mathematical table for the values of Φ (phi), which are the values of\n * the cumulative distribution function of the normal distribution.\n * It is used to find the probability that a statistic is observed below,\n * above, or between values on the standard normal distribution, and by\n * extension, any normal distribution.\n *\n * The probabilities are taken from http://en.wikipedia.org/wiki/Standard_normal_table\n * The table used is the cumulative, and not cumulative from 0 to mean\n * (even though the latter has 5 digits precision, instead of 4).\n */\nvar standardNormalTable = [\n    /*  z      0.00    0.01    0.02    0.03    0.04    0.05    0.06    0.07    0.08    0.09 */\n    /* 0.0 */\n    0.5000, 0.5040, 0.5080, 0.5120, 0.5160, 0.5199, 0.5239, 0.5279, 0.5319, 0.5359,\n    /* 0.1 */\n    0.5398, 0.5438, 0.5478, 0.5517, 0.5557, 0.5596, 0.5636, 0.5675, 0.5714, 0.5753,\n    /* 0.2 */\n    0.5793, 0.5832, 0.5871, 0.5910, 0.5948, 0.5987, 0.6026, 0.6064, 0.6103, 0.6141,\n    /* 0.3 */\n    0.6179, 0.6217, 0.6255, 0.6293, 0.6331, 0.6368, 0.6406, 0.6443, 0.6480, 0.6517,\n    /* 0.4 */\n    0.6554, 0.6591, 0.6628, 0.6664, 0.6700, 0.6736, 0.6772, 0.6808, 0.6844, 0.6879,\n    /* 0.5 */\n    0.6915, 0.6950, 0.6985, 0.7019, 0.7054, 0.7088, 0.7123, 0.7157, 0.7190, 0.7224,\n    /* 0.6 */\n    0.7257, 0.7291, 0.7324, 0.7357, 0.7389, 0.7422, 0.7454, 0.7486, 0.7517, 0.7549,\n    /* 0.7 */\n    0.7580, 0.7611, 0.7642, 0.7673, 0.7704, 0.7734, 0.7764, 0.7794, 0.7823, 0.7852,\n    /* 0.8 */\n    0.7881, 0.7910, 0.7939, 0.7967, 0.7995, 0.8023, 0.8051, 0.8078, 0.8106, 0.8133,\n    /* 0.9 */\n    0.8159, 0.8186, 0.8212, 0.8238, 0.8264, 0.8289, 0.8315, 0.8340, 0.8365, 0.8389,\n    /* 1.0 */\n    0.8413, 0.8438, 0.8461, 0.8485, 0.8508, 0.8531, 0.8554, 0.8577, 0.8599, 0.8621,\n    /* 1.1 */\n    0.8643, 0.8665, 0.8686, 0.8708, 0.8729, 0.8749, 0.8770, 0.8790, 0.8810, 0.8830,\n    /* 1.2 */\n    0.8849, 0.8869, 0.8888, 0.8907, 0.8925, 0.8944, 0.8962, 0.8980, 0.8997, 0.9015,\n    /* 1.3 */\n    0.9032, 0.9049, 0.9066, 0.9082, 0.9099, 0.9115, 0.9131, 0.9147, 0.9162, 0.9177,\n    /* 1.4 */\n    0.9192, 0.9207, 0.9222, 0.9236, 0.9251, 0.9265, 0.9279, 0.9292, 0.9306, 0.9319,\n    /* 1.5 */\n    0.9332, 0.9345, 0.9357, 0.9370, 0.9382, 0.9394, 0.9406, 0.9418, 0.9429, 0.9441,\n    /* 1.6 */\n    0.9452, 0.9463, 0.9474, 0.9484, 0.9495, 0.9505, 0.9515, 0.9525, 0.9535, 0.9545,\n    /* 1.7 */\n    0.9554, 0.9564, 0.9573, 0.9582, 0.9591, 0.9599, 0.9608, 0.9616, 0.9625, 0.9633,\n    /* 1.8 */\n    0.9641, 0.9649, 0.9656, 0.9664, 0.9671, 0.9678, 0.9686, 0.9693, 0.9699, 0.9706,\n    /* 1.9 */\n    0.9713, 0.9719, 0.9726, 0.9732, 0.9738, 0.9744, 0.9750, 0.9756, 0.9761, 0.9767,\n    /* 2.0 */\n    0.9772, 0.9778, 0.9783, 0.9788, 0.9793, 0.9798, 0.9803, 0.9808, 0.9812, 0.9817,\n    /* 2.1 */\n    0.9821, 0.9826, 0.9830, 0.9834, 0.9838, 0.9842, 0.9846, 0.9850, 0.9854, 0.9857,\n    /* 2.2 */\n    0.9861, 0.9864, 0.9868, 0.9871, 0.9875, 0.9878, 0.9881, 0.9884, 0.9887, 0.9890,\n    /* 2.3 */\n    0.9893, 0.9896, 0.9898, 0.9901, 0.9904, 0.9906, 0.9909, 0.9911, 0.9913, 0.9916,\n    /* 2.4 */\n    0.9918, 0.9920, 0.9922, 0.9925, 0.9927, 0.9929, 0.9931, 0.9932, 0.9934, 0.9936,\n    /* 2.5 */\n    0.9938, 0.9940, 0.9941, 0.9943, 0.9945, 0.9946, 0.9948, 0.9949, 0.9951, 0.9952,\n    /* 2.6 */\n    0.9953, 0.9955, 0.9956, 0.9957, 0.9959, 0.9960, 0.9961, 0.9962, 0.9963, 0.9964,\n    /* 2.7 */\n    0.9965, 0.9966, 0.9967, 0.9968, 0.9969, 0.9970, 0.9971, 0.9972, 0.9973, 0.9974,\n    /* 2.8 */\n    0.9974, 0.9975, 0.9976, 0.9977, 0.9977, 0.9978, 0.9979, 0.9979, 0.9980, 0.9981,\n    /* 2.9 */\n    0.9981, 0.9982, 0.9982, 0.9983, 0.9984, 0.9984, 0.9985, 0.9985, 0.9986, 0.9986,\n    /* 3.0 */\n    0.9987, 0.9987, 0.9987, 0.9988, 0.9988, 0.9989, 0.9989, 0.9989, 0.9990, 0.9990\n];\n\nmodule.exports = standardNormalTable;"
+    },
+    "name": "standardNormalTable",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "standardNormalTable"
+    ]
+  },
+  {
+    "description": "The sum of an array is the result of adding all numbers\ntogether, starting from zero.\n\nThis runs on `O(n)`, linear time in respect to the array",
+    "tags": [
+      {
+        "title": "param",
+        "description": "input",
+        "lineNumber": 6,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      },
+      {
+        "title": "returns",
+        "description": "sum of all input numbers",
+        "lineNumber": 7,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "example",
+        "description": "console.log(sum([1, 2, 3])); // 6",
+        "lineNumber": 8
+      },
+      {
+        "title": "name",
+        "name": "sum"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 3,
+        "column": 0
+      },
+      "end": {
+        "line": 13,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 14,
+          "column": 0
+        },
+        "end": {
+          "line": 20,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/sum.js",
+      "code": "'use strict';\n\n/**\n * The sum of an array is the result of adding all numbers\n * together, starting from zero.\n *\n * This runs on `O(n)`, linear time in respect to the array\n *\n * @param {Array<number>} x input\n * @return {number} sum of all input numbers\n * @example\n * console.log(sum([1, 2, 3])); // 6\n */\nfunction sum(x) {\n    var value = 0;\n    for (var i = 0; i < x.length; i++) {\n        value += x[i];\n    }\n    return value;\n}\n\nmodule.exports = sum;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": "input",
+        "lineNumber": 6,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "x"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "sum of all input numbers",
+        "lineNumber": 7,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "examples": [
+      "<span class=\"hljs-built_in\">console</span>.log(sum([<span class=\"hljs-number\">1</span>, <span class=\"hljs-number\">2</span>, <span class=\"hljs-number\">3</span>])); <span class=\"hljs-comment\">// 6</span>"
+    ],
+    "name": "sum",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "sum"
+    ]
+  },
+  {
+    "description": "The sum of deviations to the Nth power.\nWhen n=2 it's the sum of squared deviations.\nWhen n=3 it's the sum of cubed deviations.",
+    "tags": [
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 5,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "input"
+      },
+      {
+        "title": "param",
+        "description": "power",
+        "lineNumber": 6,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "n"
+      },
+      {
+        "title": "returns",
+        "description": "sum of nth power deviations",
+        "lineNumber": 7,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "sumNthPowerDeviations"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 5,
+        "column": 0
+      },
+      "end": {
+        "line": 13,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 14,
+          "column": 0
+        },
+        "end": {
+          "line": 23,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/sum_nth_power_deviations.js",
+      "code": "'use strict';\n\nvar mean = require('./mean');\n\n/**\n * The sum of deviations to the Nth power.\n * When n=2 it's the sum of squared deviations.\n * When n=3 it's the sum of cubed deviations.\n *\n * @param {Array<number>} input\n * @param {number} n power\n * @returns {number} sum of nth power deviations\n */\nfunction sumNthPowerDeviations(x, n) {\n    var meanValue = mean(x),\n        sum = 0;\n\n    for (var i = 0; i < x.length; i++) {\n        sum += Math.pow(x[i] - meanValue, n);\n    }\n\n    return sum;\n}\n\nmodule.exports = sumNthPowerDeviations;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 5,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "input"
+      },
+      {
+        "title": "param",
+        "description": "power",
+        "lineNumber": 6,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "n"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "sum of nth power deviations",
+        "lineNumber": 7,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "sumNthPowerDeviations",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "sumNthPowerDeviations"
+    ]
+  },
+  {
+    "description": "This is to compute a one-sample t-test, comparing the mean\nof a sample to a known value, x.\n\nin this case, we're trying to determine whether the\npopulation mean is equal to the value that we know, which is `x`\nhere. usually the results here are used to look up a\n[p-value](http://en.wikipedia.org/wiki/P-value), which, for\na certain level of significance, will let you determine that the\nnull hypothesis can or cannot be rejected.",
+    "tags": [
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 11,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "sample"
+      },
+      {
+        "title": "returns",
+        "description": "value",
+        "lineNumber": 12,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "tTest"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 6,
+        "column": 0
+      },
+      "end": {
+        "line": 19,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 20,
+          "column": 0
+        },
+        "end": {
+          "line": 33,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/t_test.js",
+      "code": "'use strict';\n\nvar standardDeviation = require('./standard_deviation');\nvar mean = require('./mean');\n\n/**\n * This is to compute a one-sample t-test, comparing the mean\n * of a sample to a known value, x.\n *\n * in this case, we're trying to determine whether the\n * population mean is equal to the value that we know, which is `x`\n * here. usually the results here are used to look up a\n * [p-value](http://en.wikipedia.org/wiki/P-value), which, for\n * a certain level of significance, will let you determine that the\n * null hypothesis can or cannot be rejected.\n *\n * @param {Array<number>} sample\n * @returns {number} value\n */\nfunction tTest(sample, x) {\n    // The mean of the sample\n    var sampleMean = mean(sample);\n\n    // The standard deviation of the sample\n    var sd = standardDeviation(sample);\n\n    // Square root the length of the sample\n    var rootN = Math.sqrt(sample.length);\n\n    // Compute the known value against the sample,\n    // returning the t value\n    return (sampleMean - x) / (sd / rootN);\n}\n\nmodule.exports = tTest;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 11,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "sample"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "value",
+        "lineNumber": 12,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "tTest",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "tTest"
+    ]
+  },
+  {
+    "description": "This is to compute [two sample t-test](http://en.wikipedia.org/wiki/Student's_t-test).\nTests whether \"mean(X)-mean(Y) = difference\", (\nin the most common case, we often have `difference == 0` to test if two samples\nare likely to be taken from populations with the same mean value) with\nno prior knowledge on standard deviations of both samples\nother than the fact that they have the same standard deviation.\n\nUsually the results here are used to look up a\n[p-value](http://en.wikipedia.org/wiki/P-value), which, for\na certain level of significance, will let you determine that the\nnull hypothesis can or cannot be rejected.\n\n`diff` can be omitted if it equals 0.\n\n[This is used to confirm or deny](http://www.monarchlab.org/Lab/Research/Stats/2SampleT.aspx)\na null hypothesis that the two populations that have been sampled into\n`sampleX` and `sampleY` are equal to each other.\n\nDepends on `sampleVariance()` and `mean()`",
+    "tags": [
+      {
+        "title": "name",
+        "name": "tTestTwoSample"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 6,
+        "column": 0
+      },
+      "end": {
+        "line": 26,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 27,
+          "column": 0
+        },
+        "end": {
+          "line": 48,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/t_test_two_sample.js",
+      "code": "'use strict';\n\nvar mean = require('./mean');\nvar sampleVariance = require('./sample_variance');\n\n/**\n * This is to compute [two sample t-test](http://en.wikipedia.org/wiki/Student's_t-test).\n * Tests whether \"mean(X)-mean(Y) = difference\", (\n * in the most common case, we often have `difference == 0` to test if two samples\n * are likely to be taken from populations with the same mean value) with\n * no prior knowledge on standard deviations of both samples\n * other than the fact that they have the same standard deviation.\n *\n * Usually the results here are used to look up a\n * [p-value](http://en.wikipedia.org/wiki/P-value), which, for\n * a certain level of significance, will let you determine that the\n * null hypothesis can or cannot be rejected.\n *\n * `diff` can be omitted if it equals 0.\n *\n * [This is used to confirm or deny](http://www.monarchlab.org/Lab/Research/Stats/2SampleT.aspx)\n * a null hypothesis that the two populations that have been sampled into\n * `sampleX` and `sampleY` are equal to each other.\n *\n * Depends on `sampleVariance()` and `mean()`\n */\nfunction tTestTwoSample(sampleX, sampleY, difference) {\n    var n = sampleX.length,\n        m = sampleY.length;\n\n    // If either sample doesn't actually have any values, we can't\n    // compute this at all, so we return `null`.\n    if (!n || !m) { return null; }\n\n    // default difference (mu) is zero\n    if (!difference) {\n        difference = 0;\n    }\n\n    var meanX = mean(sampleX),\n        meanY = mean(sampleY);\n\n    var weightedVariance = ((n - 1) * sampleVariance(sampleX) +\n        (m - 1) * sampleVariance(sampleY)) / (n + m - 2);\n\n    return (meanX - meanY - difference) /\n        Math.sqrt(weightedVariance * (1 / n + 1 / m));\n}\n\nmodule.exports = tTestTwoSample;"
+    },
+    "name": "tTestTwoSample",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "tTestTwoSample"
+    ]
+  },
+  {
+    "description": "The [variance](http://en.wikipedia.org/wiki/Variance)\nis the sum of squared deviations from the mean.\n\ndepends on `mean()`",
+    "tags": [
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 6,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "input"
+      },
+      {
+        "title": "returns",
+        "description": "variance",
+        "lineNumber": 7,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "variance"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 5,
+        "column": 0
+      },
+      "end": {
+        "line": 13,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 14,
+          "column": 0
+        },
+        "end": {
+          "line": 28,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/variance.js",
+      "code": "'use strict';\n\nvar mean = require('./mean');\n\n/**\n * The [variance](http://en.wikipedia.org/wiki/Variance)\n * is the sum of squared deviations from the mean.\n *\n * depends on `mean()`\n *\n * @param {Array<number>} input\n * @returns {number} variance\n */\nfunction variance(x) {\n    // The variance of no numbers is null\n    if (x.length === 0) { return null; }\n\n    var meanValue = mean(x),\n        deviations = [];\n\n    // Make a list of squared deviations from the mean.\n    for (var i = 0; i < x.length; i++) {\n        deviations.push(Math.pow(x[i] - meanValue, 2));\n    }\n\n    // Find the mean value of that list\n    return mean(deviations);\n}\n\nmodule.exports = variance;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 6,
+        "type": {
+          "type": "TypeApplication",
+          "expression": {
+            "type": "NameExpression",
+            "name": "Array"
+          },
+          "applications": [
+            {
+              "type": "NameExpression",
+              "name": "number"
+            }
+          ]
+        },
+        "name": "input"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "variance",
+        "lineNumber": 7,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "variance",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "variance"
+    ]
+  },
+  {
+    "description": "The [Z-Score, or Standard Score](http://en.wikipedia.org/wiki/Standard_score).\n\nThe standard score is the number of standard deviations an observation\nor datum is above or below the mean. Thus, a positive standard score\nrepresents a datum above the mean, while a negative standard score\nrepresents a datum below the mean. It is a dimensionless quantity\nobtained by subtracting the population mean from an individual raw\nscore and then dividing the difference by the population standard\ndeviation.\n\nThe z-score is only defined if one knows the population parameters;\nif one only has a sample set, then the analogous computation with\nsample mean and sample standard deviation yields the\nStudent's t-statistic.",
+    "tags": [
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 16,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "x"
+      },
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 17,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "mean"
+      },
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 18,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "standardDeviation"
+      },
+      {
+        "title": "returns",
+        "description": "z score",
+        "lineNumber": 19,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      },
+      {
+        "title": "name",
+        "name": "zScore"
+      },
+      {
+        "title": "kind",
+        "kind": "function"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 3,
+        "column": 0
+      },
+      "end": {
+        "line": 23,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 24,
+          "column": 0
+        },
+        "end": {
+          "line": 26,
+          "column": 1
+        }
+      },
+      "file": "/Users/tmcw/src/simple-statistics-gh/simple-statistics-src/src/z_score.js",
+      "code": "'use strict';\n\n/**\n * The [Z-Score, or Standard Score](http://en.wikipedia.org/wiki/Standard_score).\n *\n * The standard score is the number of standard deviations an observation\n * or datum is above or below the mean. Thus, a positive standard score\n * represents a datum above the mean, while a negative standard score\n * represents a datum below the mean. It is a dimensionless quantity\n * obtained by subtracting the population mean from an individual raw\n * score and then dividing the difference by the population standard\n * deviation.\n *\n * The z-score is only defined if one knows the population parameters;\n * if one only has a sample set, then the analogous computation with\n * sample mean and sample standard deviation yields the\n * Student's t-statistic.\n *\n * @param {number} x\n * @param {number} mean\n * @param {number} standardDeviation\n * @return {number} z score\n */\nfunction zScore(x, mean, standardDeviation) {\n    return (x - mean) / standardDeviation;\n}\n\nmodule.exports = zScore;"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 16,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "x"
+      },
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 17,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "mean"
+      },
+      {
+        "title": "param",
+        "description": null,
+        "lineNumber": 18,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        },
+        "name": "standardDeviation"
+      }
+    ],
+    "returns": [
+      {
+        "title": "returns",
+        "description": "z score",
+        "lineNumber": 19,
+        "type": {
+          "type": "NameExpression",
+          "name": "number"
+        }
+      }
+    ],
+    "name": "zScore",
+    "kind": "function",
+    "members": {
+      "instance": [],
+      "static": []
+    },
+    "events": [],
+    "path": [
+      "zScore"
+    ]
+  }
+]
