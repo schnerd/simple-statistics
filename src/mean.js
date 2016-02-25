@@ -1,7 +1,7 @@
 'use strict';
 /* @flow */
 
-var sum = require('./sum');
+import { sum } from './sum';
 
 /**
  * The mean, _also known as average_,
@@ -16,11 +16,9 @@ var sum = require('./sum');
  * @example
  * console.log(mean([0, 10])); // 5
  */
-function mean(x /*: Array<number> */)/*:number*/ {
+export function mean(x /*: Array<number> */)/*:number*/ {
     // The mean of no numbers is null
     if (x.length === 0) { return NaN; }
 
     return sum(x) / x.length;
 }
-
-module.exports = mean;

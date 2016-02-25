@@ -1,7 +1,7 @@
 'use strict';
 /* @flow */
 
-var mean = require('./mean');
+import { mean } from './mean';
 
 /**
  * [Sample covariance](https://en.wikipedia.org/wiki/Sample_mean_and_sampleCovariance) of two datasets:
@@ -16,7 +16,7 @@ var mean = require('./mean');
  * var y = [6, 5, 4, 3, 2, 1];
  * sampleCovariance(x, y); //= -3.5
  */
-function sampleCovariance(x /*:Array<number>*/, y /*:Array<number>*/)/*:number*/ {
+export function sampleCovariance(x /*:Array<number>*/, y /*:Array<number>*/)/*:number*/ {
 
     // The two datasets must have the same length which must be more than 1
     if (x.length <= 1 || x.length !== y.length) {
@@ -47,5 +47,3 @@ function sampleCovariance(x /*:Array<number>*/, y /*:Array<number>*/)/*:number*/
     // the covariance is weighted by the length of the datasets.
     return sum / besselsCorrection;
 }
-
-module.exports = sampleCovariance;

@@ -11,7 +11,7 @@
  * @example
  * console.log(max([1, 2, 3, 4])); // 4
  */
-function max(x /*: Array<number> */) /*:number*/ {
+export function max(x /*: Array<number> */) /*:number*/ {
     var value;
     for (var i = 0; i < x.length; i++) {
         // On the first iteration of this loop, max is
@@ -25,5 +25,3 @@ function max(x /*: Array<number> */) /*:number*/ {
     }
     return value;
 }
-
-module.exports = max;

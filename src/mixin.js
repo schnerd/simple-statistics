@@ -19,7 +19,7 @@
  * mixin(ss, myNumbers);
  * console.log(myNumbers.sum()); // 6
  */
-function mixin(ss /*: Object */, array /*: ?Array<any> */)/*: any */ {
+export function mixin(ss /*: Object */, array /*: ?Array<any> */)/*: any */ {
     var support = !!(Object.defineProperty && Object.defineProperties);
     // Coverage testing will never test this error.
     /* istanbul ignore next */
@@ -75,5 +75,3 @@ function mixin(ss /*: Object */, array /*: ?Array<any> */)/*: any */ {
 
     return extending;
 }
-
-module.exports = mixin;

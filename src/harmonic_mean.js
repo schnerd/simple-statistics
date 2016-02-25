@@ -17,7 +17,7 @@
  * @example
  * ss.harmonicMean([2, 3]) //= 2.4
  */
-function harmonicMean(x /*: Array<number> */) {
+export function harmonicMean(x /*: Array<number> */) {
     // The mean of no numbers is null
     if (x.length === 0) { return undefined; }
 
@@ -33,5 +33,3 @@ function harmonicMean(x /*: Array<number> */) {
     // divide n by the the reciprocal sum
     return x.length / reciprocalSum;
 }
-
-module.exports = harmonicMean;

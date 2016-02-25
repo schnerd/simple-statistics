@@ -33,7 +33,7 @@
  * });
  * startingValueMean === startingValue;
  */
-function geometricMean(x /*: Array<number> */) {
+export function geometricMean(x /*: Array<number> */) {
     // The mean of no numbers is null
     if (x.length === 0) { return undefined; }
 
@@ -50,5 +50,3 @@ function geometricMean(x /*: Array<number> */) {
 
     return Math.pow(value, 1 / x.length);
 }
-
-module.exports = geometricMean;

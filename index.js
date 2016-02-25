@@ -49,9 +49,7 @@ ss.variance = require('./src/variance');
 ss.tTest = require('./src/t_test');
 ss.tTestTwoSample = require('./src/t_test_two_sample');
 // ss.jenks = require('./src/jenks');
-
-// Classifiers
-ss.bayesian = require('./src/bayesian_classifier');
+ss.BayesianClassifier = require('./src/bayesian_classifier');
 ss.perceptron = require('./src/perceptron');
 
 // Distribution-related methods

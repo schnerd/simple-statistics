@@ -16,7 +16,7 @@
  * l(0) //= 0
  * l(2) //= 2
  */
-function linearRegressionLine(mb/*: { b: number, m: number }*/)/*: Function */ {
+export function linearRegressionLine(mb/*: { b: number, m: number }*/)/*: Function */ {
     // Return a function that computes a `y` value for each
     // x value it is given, based on the values of `b` and `a`
     // that we just computed.
@@ -24,5 +24,3 @@ function linearRegressionLine(mb/*: { b: number, m: number }*/)/*: Function */ {
         return mb.b + (mb.m * x);
     };
 }
-
-module.exports = linearRegressionLine;

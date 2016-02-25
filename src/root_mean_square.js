@@ -14,7 +14,7 @@
  * @example
  * rootMeanSquare([-1, 1, -1, 1]); //= 1
  */
-function rootMeanSquare(x /*: Array<number> */)/*:number*/ {
+export function rootMeanSquare(x /*: Array<number> */)/*:number*/ {
     if (x.length === 0) { return NaN; }
 
     var sumOfSquares = 0;
@@ -24,5 +24,3 @@ function rootMeanSquare(x /*: Array<number> */)/*:number*/ {
 
     return Math.sqrt(sumOfSquares / x.length);
 }
-
-module.exports = rootMeanSquare;

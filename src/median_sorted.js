@@ -18,7 +18,7 @@
  * var incomes = [10, 2, 5, 100, 2, 1];
  * median(incomes); //= 3.5
  */
-function medianSorted(sorted /*: Array<number> */)/*:number*/ {
+export function medianSorted(sorted /*: Array<number> */)/*:number*/ {
     // The median of an empty list is NaN
     if (sorted.length === 0) { return NaN; }
 
@@ -33,5 +33,3 @@ function medianSorted(sorted /*: Array<number> */)/*:number*/ {
         return (a + b) / 2;
     }
 }
-
-module.exports = medianSorted;

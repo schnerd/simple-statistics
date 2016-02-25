@@ -1,8 +1,8 @@
 'use strict';
 /* @flow */
 
-var medianSorted = require('./median_sorted'),
-    numericSort = require('./numeric_sort');
+import { medianSorted } from './median_sorted';
+import { numericSort } from './numeric_sort';
 
 /**
  * The [median](http://en.wikipedia.org/wiki/Median) is
@@ -21,10 +21,8 @@ var medianSorted = require('./median_sorted'),
  * var incomes = [10, 2, 5, 100, 2, 1];
  * median(incomes); //= 3.5
  */
-function median(x /*: Array<number> */)/*:number*/ {
+export function median(x /*: Array<number> */)/*:number*/ {
     // Sorting the array makes it easy to find the center, but
     // use `.slice()` to ensure the original array `x` is not modified
     return medianSorted(numericSort(x));
 }
-
-module.exports = median;

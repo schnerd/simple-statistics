@@ -1,8 +1,8 @@
 'use strict';
 /* @flow */
 
-var sumNthPowerDeviations = require('./sum_nth_power_deviations');
-var sampleStandardDeviation = require('./sample_standard_deviation');
+import { sumNthPowerDeviations } from './sum_nth_power_deviations';
+import { sampleStandardDeviation } from './sample_standard_deviation';
 
 /**
  * [Skewness](http://en.wikipedia.org/wiki/Skewness) is
@@ -20,7 +20,7 @@ var sampleStandardDeviation = require('./sample_standard_deviation');
  * var data = [2, 4, 6, 3, 1];
  * sampleSkewness(data); //= 0.5901286564
  */
-function sampleSkewness(x /*: Array<number> */)/*:number*/ {
+export function sampleSkewness(x /*: Array<number> */)/*:number*/ {
     // The skewness of less than three arguments is null
     var theSampleStandardDeviation = sampleStandardDeviation(x);
 
@@ -34,5 +34,3 @@ function sampleSkewness(x /*: Array<number> */)/*:number*/ {
 
     return n * sumCubedDeviations / ((n - 1) * (n - 2) * cubedS);
 }
-
-module.exports = sampleSkewness;

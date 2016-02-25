@@ -15,7 +15,7 @@
  * sortedUniqueCount([1, 2, 3]); // 3
  * sortedUniqueCount([1, 1, 1]); // 1
  */
-function sortedUniqueCount(input/*: Array<any>*/)/*: number */ {
+export function sortedUniqueCount(input/*: Array<any>*/)/*: number */ {
     var uniqueValueCount = 0,
         lastSeenValue;
     for (var i = 0; i < input.length; i++) {
@@ -26,5 +26,3 @@ function sortedUniqueCount(input/*: Array<any>*/)/*: number */ {
     }
     return uniqueValueCount;
 }
-
-module.exports = sortedUniqueCount;

@@ -15,7 +15,7 @@
  * quantileSorted(data, 0); //= min(data);
  * quantileSorted(data, 0.5); //= 9
  */
-function quantileSorted(sample /*: Array<number> */, p /*: number */)/*:number*/ {
+export function quantileSorted(sample /*: Array<number> */, p /*: number */)/*:number*/ {
     var idx = sample.length * p;
     if (p < 0 || p > 1) {
         return NaN;
@@ -38,5 +38,3 @@ function quantileSorted(sample /*: Array<number> */, p /*: number */)/*:number*/
         return sample[idx];
     }
 }
-
-module.exports = quantileSorted;

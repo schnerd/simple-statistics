@@ -1,8 +1,8 @@
 'use strict';
 /* @flow */
 
-var max = require('./max'),
-    min = require('./min');
+import { max } from './max';
+import { min } from './min';
 
 /**
  * Given an array of data, this will find the extent of the
@@ -17,7 +17,7 @@ var max = require('./max'),
  * @example
  * equalIntervalBreaks([1, 2, 3, 4, 5, 6], 4); //= [1, 2.25, 3.5, 4.75, 6]
  */
-function equalIntervalBreaks(data/*: Array<number> */, nClasses/*:number*/)/*: Array<number> */ {
+export function equalIntervalBreaks(data/*: Array<number> */, nClasses/*:number*/)/*: Array<number> */ {
 
     if (data.length <= 1) {
         return data;
@@ -46,5 +46,3 @@ function equalIntervalBreaks(data/*: Array<number> */, nClasses/*:number*/)/*: A
 
     return breaks;
 }
-
-module.exports = equalIntervalBreaks;

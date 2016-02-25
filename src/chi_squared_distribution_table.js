@@ -12,7 +12,7 @@
  * Values from Appendix 1, Table III of William W. Hines & Douglas C. Montgomery, "Probability and Statistics in
  * Engineering and Management Science", Wiley (1980).
  */
-var chiSquaredDistributionTable = { '1':
+export var chiSquaredDistributionTable = { '1':
    { '0.995': 0,
      '0.99': 0,
      '0.975': 0,
@@ -456,5 +456,3 @@ var chiSquaredDistributionTable = { '1':
      '0.025': 129.56,
      '0.01': 135.81,
      '0.005': 140.17 } };
-
-module.exports = chiSquaredDistributionTable;

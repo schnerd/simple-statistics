@@ -1,8 +1,8 @@
 'use strict';
 /* @flow */
 
-var quantileSorted = require('./quantile_sorted');
-var numericSort = require('./numeric_sort');
+import { quantileSorted } from './quantile_sorted';
+import { numericSort } from './numeric_sort';
 
 /**
  * The [quantile](https://en.wikipedia.org/wiki/Quantile):
@@ -28,7 +28,7 @@ var numericSort = require('./numeric_sort');
  * quantile(data, 0); //= min(data);
  * quantile(data, 0.5); //= 9
  */
-function quantile(sample /*: Array<number> */, p /*: Array<number> | number */) {
+export function quantile(sample /*: Array<number> */, p /*: Array<number> | number */) {
     // Sort a copy of the array. We'll need a sorted array to index
     // the values in sorted order.
     var sorted = numericSort(sample);
@@ -45,5 +45,3 @@ function quantile(sample /*: Array<number> */, p /*: Array<number> | number */) 
         return quantileSorted(sorted, p);
     }
 }
-
-module.exports = quantile;

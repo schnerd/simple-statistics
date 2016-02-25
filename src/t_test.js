@@ -1,8 +1,8 @@
 'use strict';
 /* @flow */
 
-var standardDeviation = require('./standard_deviation');
-var mean = require('./mean');
+import { standardDeviation } from './standard_deviation';
+import { mean } from './mean';
 
 /**
  * This is to compute [a one-sample t-test](https://en.wikipedia.org/wiki/Student%27s_t-test#One-sample_t-test), comparing the mean
@@ -21,7 +21,7 @@ var mean = require('./mean');
  * @example
  * tTest([1, 2, 3, 4, 5, 6], 3.385); //= 0.16494154
  */
-function tTest(sample/*: Array<number> */, x/*: number */)/*:number*/ {
+export function tTest(sample/*: Array<number> */, x/*: number */)/*:number*/ {
     // The mean of the sample
     var sampleMean = mean(sample);
 
@@ -34,5 +34,3 @@ function tTest(sample/*: Array<number> */, x/*: number */)/*:number*/ {
     // returning the t value
     return (sampleMean - x) / (sd / rootN);
 }
-
-module.exports = tTest;

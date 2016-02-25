@@ -21,7 +21,7 @@
  * //   animal: 1
  * // }
  */
-function BayesianClassifier() {
+export function BayesianClassifier() {
     // The number of items that are currently
     // classified in the model
     this.totalCount = 0;
@@ -114,5 +114,3 @@ BayesianClassifier.prototype.score = function(item) {
 
     return oddsSums;
 };
-
-module.exports = BayesianClassifier;

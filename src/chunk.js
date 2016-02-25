@@ -16,7 +16,7 @@
  * @example
  * console.log(chunk([1, 2, 3, 4], 2)); // [[1, 2], [3, 4]]
  */
-function chunk(sample/*:Array<any>*/, chunkSize/*:number*/)/*:?Array<Array<any>>*/ {
+export function chunk(sample/*:Array<any>*/, chunkSize/*:number*/)/*:?Array<Array<any>>*/ {
 
     // a list of result chunks, as arrays in an array
     var output = [];
@@ -40,5 +40,3 @@ function chunk(sample/*:Array<any>*/, chunkSize/*:number*/)/*:?Array<Array<any>>
     }
     return output;
 }
-
-module.exports = chunk;
